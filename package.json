@@ -1,0 +1,68 @@
+{
+  "name": "d-speech",
+  "version": "1.0.0",
+  "description": "Speech Recognition ~ D.D@Copyright",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack --watch",
+    "start": "webpack-dev-server",
+    "lint": "eslint --ext .js --ext .jsx src/"
+  },
+  "keywords": [
+    "React",
+    "Redux",
+    "ES6",
+    "Babel"
+  ],
+  "author": "Kiran Bose",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "copy-webpack-plugin": "^4.5.2",
+    "css-loader": "^1.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-loader": "^2.1.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "live-server": "^1.2.0",
+    "node-sass": "^4.9.2",
+    "sass-loader": "^7.1.0",
+    "scss-loader": "0.0.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^3.12.0",
+    "webpack-dev-server": "^2.11.2"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.2.0",
+    "bootstrap": "^4.1.3",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-logger": "^3.0.6",
+    "history": "^4.6.3",
+    "react-router-dom": "^4.1.2",
+    "redux-thunk": "^2.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kiranbose/d-speech.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kiranbose/d-speech/issues"
+  },
+  "homepage": "https://github.com/kiranbose/d-speech#readme"
+}
