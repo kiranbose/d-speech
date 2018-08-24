@@ -3,7 +3,7 @@ import { Router, Route, Switch, Redirect, IndexRoute } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { history } from '../../_helpers';
-import { alertActions } from '../../_actions';
+import { alertActions, pathActions } from '../../_actions';
 import { PrivateRoute } from '../../components';
 import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
@@ -19,6 +19,7 @@ class App extends React.Component {
         history.listen((location, action) => {
             // clear alert on location change
             dispatch(alertActions.clear());
+            dispatch(pathActions.pathChange(location));
         });
     }
 
@@ -27,7 +28,7 @@ class App extends React.Component {
         return (
             <Router history={history}>
                 <div>
-                    <Route exact={true} path="/dashboard" component={HomePage}/>
+                    <PrivateRoute path="/dashboard" component={HomePage}/>
                     <div className="jumbotron">
                         <div className="container">
                             <div className="col-md-8 offset-md-2">
@@ -35,7 +36,6 @@ class App extends React.Component {
                                     <div className={`alert ${alert.type}`}>{alert.message}</div>
                                 }
                                 <div>
-                                    {/* <PrivateRoute exact path="/" component={HomePage} /> -- commenting temporarily for loading login on refresh */}
                                     <Switch>
                                         <Route path="/login" component={LoginPage} />
                                         <Route path="/register" component={RegisterPage} />
