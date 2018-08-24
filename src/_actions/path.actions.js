@@ -4,15 +4,15 @@ export const pathActions = {
 };
 
 function pathChange(path) {
-    return { type: 'Path-change', path };
+    return { type: 'path-change', path };
 }
 
 export function path(state = {}, action) {
     switch (action.type) {
-      case 'Path change':
+      case 'path-change':
         return {
-          type: 'Path-change',
-          message: action.path
+          type: 'path-change',
+          path: action.path.pathname
         };
       default:
         return state

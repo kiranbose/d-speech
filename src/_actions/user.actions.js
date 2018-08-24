@@ -19,7 +19,6 @@ function login(username, password) {
             .then(
                 user => { 
                     dispatch(success(user));
-                    setCookie('email', user.email);
                     history.push('/dashboard');
                 },
                 error => {

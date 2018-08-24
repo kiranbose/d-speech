@@ -14,8 +14,8 @@ import { VoicesPage } from '../voicesPage';
 class App extends React.Component {
     constructor(props) {
         super(props);
-
         const { dispatch } = this.props;
+        dispatch(pathActions.pathChange(history.location));
         history.listen((location, action) => {
             // clear alert on location change
             dispatch(alertActions.clear());
