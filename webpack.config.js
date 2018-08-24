@@ -8,10 +8,13 @@ const flaskEndPoint = ' http://127.0.0.1:5000'
 module.exports = function webpackConfig() {
   return {
     devtool: 'source-map',
-    entry: './src/index.jsx',
+    entry: [
+      './src/index.jsx'
+    ],
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js'
+      filename: 'bundle.js',
+      publicPath : '/'
     },
     module: {
       rules: [
@@ -53,11 +56,11 @@ module.exports = function webpackConfig() {
           })
         },
         {
-          test: /\.(svg|eot|woff|woff2|ttf)$/,
+          test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg)(\?.*$|$)/,
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'assets/fonts/'
+            outputPath: './src/assets/fonts/'
           }
         }
       ]
@@ -86,7 +89,8 @@ module.exports = function webpackConfig() {
     externals: {
       // global app config object
       config: JSON.stringify({
-          apiUrl: flaskEndPoint
+          apiUrl: flaskEndPoint,
+          permission: 'guest'
     })
   }
   };

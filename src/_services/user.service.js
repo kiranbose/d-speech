@@ -1,4 +1,4 @@
-import config from 'config';
+import config from 'config';  //global variables - set shared variables in webpack.config
 import { authHeader } from '../_helpers';
 
 export const userService = {
@@ -29,6 +29,7 @@ function login(email, password) {
             if (user.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
+                config.permission = user.permission
             }
             return user;
         });
@@ -46,7 +47,7 @@ function getAll() {
         credentials: 'same-origin'
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse).then(handleResponse, handleError);
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
 
     // return fetch(`${config.apiUrl}/users`).then(u => console(u)).then(user => {
     //     console.log(user);
@@ -72,7 +73,7 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/register`, requestOptions).then(handleResponse);
 }
 
 function update(user) {

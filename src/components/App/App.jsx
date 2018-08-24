@@ -1,5 +1,5 @@
 import React from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Router, Route, Switch, Redirect, IndexRoute } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { history } from '../../_helpers';
@@ -9,6 +9,7 @@ import { HomePage } from '../HomePage';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
 import './app.scss'
+import { VoicesPage } from '../voicesPage';
 
 class App extends React.Component {
     constructor(props) {
@@ -22,25 +23,29 @@ class App extends React.Component {
     }
 
     render() {
-        const { alert } = this.props;
+        const { alert, location } = this.props;
         return (
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
-                        {alert.message &&
-                            <div className={`alert ${alert.type}`}>{alert.message}</div>
-                        }
-                        <Router history={history}>
-                            <div>
-                                {/* <PrivateRoute exact path="/" component={HomePage} /> -- commenting temporarily for loading login on refresh */}
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
-                                <Route path="/register" component={RegisterPage} />
+            <Router history={history}>
+                <div>
+                    <Route exact={true} path="/dashboard" component={HomePage}/>
+                    <div className="jumbotron">
+                        <div className="container">
+                            <div className="col-md-8 offset-md-2">
+                                {alert.message &&
+                                    <div className={`alert ${alert.type}`}>{alert.message}</div>
+                                }
+                                <div>
+                                    {/* <PrivateRoute exact path="/" component={HomePage} /> -- commenting temporarily for loading login on refresh */}
+                                    <Switch>
+                                        <Route path="/login" component={LoginPage} />
+                                        <Route path="/register" component={RegisterPage} />
+                                    </Switch>
+                                </div>
                             </div>
-                        </Router>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Router>
         );
     }
 }

@@ -20,7 +20,7 @@ function login(username, password) {
                 user => { 
                     dispatch(success(user));
                     setCookie('email', user.email);
-                    history.push('/');
+                    history.push('/dashboard');
                 },
                 error => {
                     dispatch(failure(error.toString()));
