@@ -3,6 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const devPort = 9000;
+const flaskEndPoint = ' http://127.0.0.1:5000'
 
 module.exports = function webpackConfig() {
   return {
@@ -79,16 +80,13 @@ module.exports = function webpackConfig() {
     devServer: {
       contentBase: path.join(__dirname, 'dist'),
       compress: true,
-      port: devPort
-    },
-    devServer: {
       historyApiFallback: true,
       port: devPort
     },
     externals: {
       // global app config object
       config: JSON.stringify({
-          apiUrl: 'http://localhost:' + devPort
+          apiUrl: flaskEndPoint
     })
   }
   };

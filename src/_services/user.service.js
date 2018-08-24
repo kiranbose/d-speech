@@ -11,22 +11,25 @@ export const userService = {
     delete: _delete
 };
 
-function login(username, password) {
+function login(email, password) {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        headers: { 
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: 'same-origin'
     };
 
-    return fetch(`${config.apiUrl}/users/authenticate`, requestOptions)
+    return fetch(`${config.apiUrl}/login`, requestOptions)
         .then(handleResponse)
         .then(user => {
+            user = user.result;
             // login successful if there's a jwt token in the response
             if (user.token) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('user', JSON.stringify(user));
             }
-
             return user;
         });
 }
@@ -39,10 +42,18 @@ function logout() {
 function getAll() {
     const requestOptions = {
         method: 'GET',
-        headers: authHeader()
+        headers: authHeader(),
+        credentials: 'same-origin'
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse).then(handleResponse, handleError);
+
+    // return fetch(`${config.apiUrl}/users`).then(u => console(u)).then(user => {
+    //     console.log(user);
+    // });
+        // .then(data => data.json())
+        // .then(handleResponse)
+        // .catch(handleError);
 }
 
 function getById(id) {
@@ -88,8 +99,8 @@ function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
+            if (response.status === 410 && data.message === 'Session Timed Out') {
+                // auto logout if 410 response returned from api
                 logout();
                 location.reload(true);
             }
@@ -100,4 +111,11 @@ function handleResponse(response) {
 
         return data;
     });
+}
+
+function handleError(response) {
+    if (response === 'Session Timed Out') {
+        logout();
+        location.reload(true);
+    }
 }
