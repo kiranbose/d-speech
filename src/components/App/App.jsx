@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { history } from '../../_helpers';
 import { alertActions, pathActions } from '../../_actions';
 import { PrivateRoute } from '../../components';
-import { HomePage } from '../HomePage';
+import MiniDrawer from './AppBar';
 import { LoginPage } from '../LoginPage';
 import { RegisterPage } from '../RegisterPage';
 import './app.scss'
-import { VoicesPage } from '../voicesPage';
+import { VoicesPage } from '../VoicesPage';
 
 class App extends React.Component {
     constructor(props) {
@@ -24,11 +24,12 @@ class App extends React.Component {
     }
 
     render() {
-        const { alert, location, path } = this.props;
+        const { alert, location, path, authentication } = this.props;
         return (
             <Router history={history}>
                 <div>
-                    <PrivateRoute path="/dashboard" component={HomePage}/>
+                    {/* <Redirect from="/" to="/dashboard" /> */}
+                    <Route path="/" render={() => <MiniDrawer {...this.props} isAuthed={true} />}/> } />
                     { (path && path.path === '/login' || path.path === '/register') 
                     ?  <div className="jumbotron" >
                         <div className="container">
@@ -52,10 +53,11 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert, path } = state;
+    const { alert, path, authentication } = state;
     return {
         alert,
-        path
+        path,
+        authentication
     };
 }
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link, Router, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { userActions } from '../../_actions';
-import { VoicesPage } from '../voicesPage/voicesPage'
-import './home.page.scss'
+import './dashboard.scss';
+import MiniDrawer from './Dashboard';
 
-class HomePage extends React.Component {
+class Dashboard extends React.Component {
     componentDidMount() {
         this.props.dispatch(userActions.getAll());
     }
@@ -45,7 +45,6 @@ class HomePage extends React.Component {
                         </ul>
                     </div>
                 </nav>
-                <Route path={"/dashboard/:sectionName"} component={VoicesPage}/>
             </div>
         );
     }
@@ -60,5 +59,5 @@ function mapStateToProps(state) {
     };
 }
 
-const connectedHomePage = connect(mapStateToProps)(HomePage);
-export { connectedHomePage as HomePage };
+const connectedDashboard = connect(mapStateToProps)(Dashboard);
+export { connectedDashboard as Dashboard };
