@@ -1,5 +1,6 @@
 import config from 'config';  //global variables - set shared variables in webpack.config
 import { authHeader } from '../_helpers';
+import { commonHandlers } from './index'
 
 export const userService = {
     login,
@@ -22,7 +23,7 @@ function login(email, password) {
     };
 
     return fetch(`${config.apiUrl}/login`, requestOptions)
-        .then(handleResponse)
+        .then(commonHandlers.handleAuthentication)
         .then(user => {
             user = user.result;
             // login successful if there's a jwt token in the response
@@ -47,13 +48,13 @@ function getAll() {
         credentials: 'same-origin'
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/users`, requestOptions).then(commonHandlers.handleAuthentication);
 
     // return fetch(`${config.apiUrl}/users`).then(u => console(u)).then(user => {
     //     console.log(user);
     // });
         // .then(data => data.json())
-        // .then(handleResponse)
+        // .then(commonHandlers.handleAuthentication)
         // .catch(handleError);
 }
 
@@ -63,7 +64,7 @@ function getById(id) {
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(commonHandlers.handleAuthentication);
 }
 
 function register(user) {
@@ -73,7 +74,7 @@ function register(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/register`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/register`, requestOptions).then(commonHandlers.handleAuthentication);
 }
 
 function update(user) {
@@ -83,7 +84,7 @@ function update(user) {
         body: JSON.stringify(user)
     };
 
-    return fetch(`${config.apiUrl}/users/${user.id}`, requestOptions).then(handleResponse);;
+    return fetch(`${config.apiUrl}/users/${user.id}`, requestOptions).then(commonHandlers.handleAuthentication);;
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -93,30 +94,5 @@ function _delete(id) {
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(handleResponse);
-}
-
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 410 && data.message === 'Session Timed Out') {
-                // auto logout if 410 response returned from api
-                logout();
-                location.reload(true);
-            }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
-}
-
-function handleError(response) {
-    if (response === 'Session Timed Out') {
-        logout();
-        location.reload(true);
-    }
+    return fetch(`${config.apiUrl}/users/${id}`, requestOptions).then(commonHandlers.handleAuthentication);
 }

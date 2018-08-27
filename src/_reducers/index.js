@@ -4,6 +4,7 @@ import { authentication } from './authentication.reducer';
 import { registration } from './registration.reducer';
 import { users } from './users.reducer';
 import { alert } from './alert.reducer';
+import { recordings } from './recording.reducer';
 import { path } from '../_actions/path.actions';
 
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   registration,
   users,
   alert,
-  path
+  path,
+  recordings
 });
 
 export default rootReducer;
