@@ -24,12 +24,13 @@ class App extends React.Component {
     }
 
     render() {
-        const { alert, location } = this.props;
+        const { alert, location, path } = this.props;
         return (
             <Router history={history}>
                 <div>
                     <PrivateRoute path="/dashboard" component={HomePage}/>
-                    <div className="jumbotron">
+                    { (path && path.path === '/login' || path.path === '/register') 
+                    ?  <div className="jumbotron" >
                         <div className="container">
                             <div className="col-md-8 offset-md-2">
                                 {alert.message &&
@@ -43,7 +44,7 @@ class App extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> : ''}
                 </div>
             </Router>
         );
@@ -51,9 +52,10 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
+    const { alert, path } = state;
     return {
-        alert
+        alert,
+        path
     };
 }
 
