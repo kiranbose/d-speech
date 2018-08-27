@@ -7,6 +7,9 @@ export const recordService = {
 };
 
 function postRecording(recording) {
+    /**
+     * Save a recording in daatbase
+     */
     const data = new FormData();    
     data.append('file', recording.blob, 'recording.wav')
     const requestOptions = {
