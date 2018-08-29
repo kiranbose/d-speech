@@ -1,12 +1,62 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { userActions, pathActions } from '../../_actions';
+import { withStyles } from '@material-ui/core/styles';
+import compose from 'recompose/compose';
+import classNames from 'classnames';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { Grid, TextField, FormHelperText } from '@material-ui/core';
+import { VerifiedUser } from '@material-ui/icons';
 
-import { userActions } from '../../_actions';
 
+
+const styles = theme => ({
+    layout: {
+      width: 'auto',
+      display: 'block', // Fix IE11 issue.
+      marginLeft: theme.spacing.unit * 3,
+      marginRight: theme.spacing.unit * 3,
+      [theme.breakpoints.up(800 + theme.spacing.unit * 3 * 2)]: {
+        width: 800,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
+    },
+    paper: {
+      marginTop: theme.spacing.unit * 8,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    },
+    avatar: {
+      margin: theme.spacing.unit,
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE11 issue.
+      marginTop: theme.spacing.unit,
+    },
+    submit: {
+      marginTop: theme.spacing.unit * 3,
+    },
+  });
+  
 class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
+
+        // reset login status
+        this.props.dispatch(userActions.logout());
 
         this.state = {
             user: {
@@ -25,6 +75,9 @@ class RegisterPage extends React.Component {
             },
             submitted: false
         };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -53,117 +106,184 @@ class RegisterPage extends React.Component {
     }
 
     render() {
-        const { registering  } = this.props;
+        const { registering, classes } = this.props;
         const { user, submitted } = this.state;
         return (
-            <div className="col-md-6 offset-md-3">
-                <h2>Register</h2>
-                <form name="form" onSubmit={this.handleSubmit}>
-                    <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
-                        <label htmlFor="firstName">First Name</label>
-                        <input type="text" className="form-control" name="firstName" value={user.firstName} onChange={this.handleChange} />
-                        {submitted && !user.firstName &&
-                            <div className="help-block">First Name is required</div>
-                        }
-                    </div>
-                    <div className={'form-group' + (submitted && !user.lastName ? ' has-error' : '')}>
-                        <label htmlFor="lastName">Last Name</label>
-                        <input type="text" className="form-control" name="lastName" value={user.lastName} onChange={this.handleChange} />
-                        {submitted && !user.lastName &&
-                            <div className="help-block">Last Name is required</div>
-                        }
-                    </div>
-                    <div className={'form-group' + (submitted && !user.email ? ' has-error' : '')}>
-                        <label htmlFor="email">E-mail</label>
-                        <input type="text" className="form-control" type="email" name="email" value={user.email} onChange={this.handleChange} />
-                        {submitted && !user.email &&
-                            <div className="help-block">E-mail is required</div>
-                        }
-                    </div>
-                    <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
-                        <label htmlFor="password">Password</label>
-                        <input type="password" className="form-control" name="password" value={user.password} onChange={this.handleChange} />
-                        {submitted && !user.password &&
-                            <div className="help-block">Password is required</div>
-                        }
-                    </div>
+            <React.Fragment>
+            <CssBaseline />
+            <main className={classes.layout}>
+              <Paper className={classes.paper}>
+                <Typography variant="headline">D.Speech</Typography>
+                <Avatar className={classes.avatar}>
+                  <VerifiedUser />
+                </Avatar>
+                <Typography variant="subheading">Register</Typography>
+                <form className={classes.form} onSubmit={this.handleSubmit}>
+                <Grid
+                    container
+                    spacing={24}
+                    alignItems="center"
+                    direction="row"
+                    justify="center"
+                    >
+                    <Grid item md xs={12}>
+                        <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="email">Email Address</InputLabel>
+                        <Input id="email" type="email" name="email" autoComplete="email" autoFocus value={this.state.email} onChange={this.handleChange}/>
+                        <FormHelperText hidden={!(submitted && !user.email)} error={true}>This field is required</FormHelperText>
+                    </FormControl>
+                    <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="password">Password</InputLabel>
+                        <Input
+                        name="password"
+                        type="password"
+                        id="password"
+                        autoComplete="current-password"
+                        value={this.state.password} onChange={this.handleChange}
+                        />
+                        <FormHelperText hidden={!(submitted && !user.password)} error={true}>This field is required</FormHelperText>
+                    </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.empId ? ' has-error' : '')}>
-                        <label htmlFor="empId">Employee Id</label>
-                        <input className="form-control" name="empId" value={user.empId} onChange={this.handleChange} />
-                        {submitted && !user.empId &&
-                            <div className="help-block">employee Id is required</div>
-                        }
-                    </div>
+                    <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="firstName">First Name</InputLabel>
+                        <Input required
+                        name="firstName"
+                        type="firstName"
+                        id="firstName"
+                        autoComplete="firstName"
+                        value={user.firstName} onChange={this.handleChange}
+                        />
+                        <FormHelperText hidden={!(submitted && !user.firstName)} error={true}>This field is required</FormHelperText>
+                    </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.industry ? ' has-error' : '')}>
-                        <label htmlFor="industry">Industry</label>
-                        <input className="form-control" name="industry" value={user.industry} onChange={this.handleChange} />
-                        {submitted && !user.industry &&
-                            <div className="help-block">Industry is required</div>
-                        }
-                    </div>
+                    <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                        <Input
+                        name="lastName"
+                        type="lastName"
+                        id="lastName"
+                        autoComplete="lastName"
+                        value={user.lastName} onChange={this.handleChange}
+                        />
+                        <FormHelperText hidden={!(submitted && !user.lastName)} error={true}>This field is required</FormHelperText>
+                    </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.serviceLine ? ' has-error' : '')}>
-                        <label htmlFor="serviceLine">Service Line</label>
-                        <input className="form-control" name="serviceLine" value={user.serviceLine} onChange={this.handleChange} />
-                        {submitted && !user.serviceLine &&
-                            <div className="help-block">Service Line is required</div>
-                        }
-                    </div>
+                    <FormControl margin="normal" required fullWidth>
+                        <InputLabel htmlFor="empId">Employee Id</InputLabel>
+                        <Input
+                        name="empId"
+                        type="empId"
+                        id="empId"
+                        autoComplete="empId"
+                        value={user.empId} onChange={this.handleChange}
+                        />
+                        <FormHelperText hidden={!(submitted && !user.empId)} error={true}>This field is required</FormHelperText>
+                    </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.serviceArea ? ' has-error' : '')}>
-                        <label htmlFor="serviceArea">Service Area</label>
-                        <input className="form-control" name="serviceArea" value={user.serviceArea} onChange={this.handleChange} />
-                        {submitted && !user.serviceArea &&
-                            <div className="help-block">Service Area is required</div>
-                        }
-                    </div>
+                    </Grid>
+                    
+                    <Grid item md xs={12}>
+                        
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="industry">Industry</InputLabel>
+                            <Input
+                            name="industry"
+                            type="industry"
+                            id="industry"
+                            autoComplete="industry"
+                            value={user.industry} onChange={this.handleChange}
+                            />
+                        <FormHelperText hidden={!(submitted && !user.industry)} error={true}>This field is required</FormHelperText>
+                        </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.designation ? ' has-error' : '')}>
-                        <label htmlFor="designation">Designation</label>
-                        <input className="form-control" name="designation" value={user.designation} onChange={this.handleChange} />
-                        {submitted && !user.designation &&
-                            <div className="help-block">Designation is required</div>
-                        }
-                    </div>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="serviceLine">Service Line</InputLabel>
+                            <Input
+                            name="serviceLine"
+                            type="serviceLine"
+                            id="serviceLine"
+                            autoComplete="serviceLine"
+                            value={user.serviceLine} onChange={this.handleChange}
+                            />
+                        <FormHelperText hidden={!(submitted && !user.serviceLine)} error={true}>This field is required</FormHelperText>
+                        </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.location ? ' has-error' : '')}>
-                        <label htmlFor="location">Location</label>
-                        <input className="form-control" name="location" value={user.location} onChange={this.handleChange} />
-                        {submitted && !user.location &&
-                            <div className="help-block">Location is required</div>
-                        }
-                    </div>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="designation">Designation</InputLabel>
+                            <Input
+                            name="designation"
+                            type="designation"
+                            id="designation"
+                            autoComplete="designation"
+                            value={user.designation} onChange={this.handleChange}
+                            />
+                        <FormHelperText hidden={!(submitted && !user.designation)} error={true}>This field is required</FormHelperText>
+                        </FormControl>
 
-                    <div className={'form-group' + (submitted && !user.mobileNo ? ' has-error' : '')}>
-                        <label htmlFor="mobileNo">Mobile No:</label>
-                        <input className="form-control" type="number" name="mobileNo" value={user.mobileNo} onChange={this.handleChange} />
-                        {submitted && !user.mobileNo &&
-                            <div className="help-block">Mobile No is required</div>
-                        }
-                    </div>
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="location">Location</InputLabel>
+                            <Input
+                            name="location"
+                            type="location"
+                            id="location"
+                            autoComplete="location"
+                            value={user.location} onChange={this.handleChange}
+                            />
+                        <FormHelperText hidden={!(submitted && !user.location)} error={true}>This field is required</FormHelperText>
+                        </FormControl>
+
+                        <FormControl margin="normal" required fullWidth>
+                            <InputLabel htmlFor="mobileNo">Mobile No:</InputLabel>
+                            <Input
+                            name="mobileNo"
+                            type="mobileNo"
+                            id="mobileNo"
+                            autoComplete="mobileNo"
+                            value={user.mobileNo} onChange={this.handleChange}
+                            />
+                        <FormHelperText hidden={!(submitted && !user.mobileNo)} error={true}>This field is required</FormHelperText>
+                        </FormControl>
+
+                    </Grid>
+
+                </Grid>
+                 
 
 
-                    <div className="form-group">
-                        <button className="btn btn-primary">Register</button>
-                        { registering && 
-                            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                        }
-                        <Link to="/login" className="btn btn-link">Cancel</Link>
-                    </div>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="raised"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={this.handleSubmit}
+                  >
+                    Register
+                  </Button>
+                  <br/> <br/>
+                  <Button fullWidth color="secondary" onClick={() => pathActions.navigateToPage('/login')}>
+                    Cancel
+                  </Button>
                 </form>
-            </div>
+              </Paper>
+            </main>
+          </React.Fragment>
         );
     }
 }
 
+
 function mapStateToProps(state) {
-    const { registering } = state.registration;
+    const loggingIn = true;
     return {
-        registering
+        loggingIn,
+        styles
     };
 }
 
-const connectedRegisterPage = connect(mapStateToProps)(RegisterPage);
-export { connectedRegisterPage as RegisterPage };
+export default compose(
+    withStyles(styles, { name: 'RegisterPage' }),
+    connect(mapStateToProps, null)
+  )(RegisterPage);
+
+

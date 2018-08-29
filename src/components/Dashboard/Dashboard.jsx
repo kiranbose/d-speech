@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { userActions } from '../../_actions';
+import { userActions, pathActions } from '../../_actions';
 import './dashboard.scss';
-import MiniDrawer from './Dashboard';
 
 class Dashboard extends React.Component {
     componentDidMount() {

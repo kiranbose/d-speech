@@ -1,19 +1,25 @@
 import React from 'react';
 import { Router, Route, Switch, Redirect, IndexRoute } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import config from 'config';
 import { history } from '../../_helpers';
 import { alertActions, pathActions } from '../../_actions';
 import { PrivateRoute } from '../../components';
 import MiniDrawer from './AppBar';
-import { LoginPage } from '../LoginPage';
-import { RegisterPage } from '../RegisterPage';
+import LoginPage from '../LoginPage/LoginPage';
+import RegisterPage from '../RegisterPage/RegisterPage';
 import './app.scss'
 import { VoicesPage } from '../VoicesPage';
+import { LinearProgress } from '@material-ui/core';
+import Alert from './SnackBarContent';
+import { store } from '../../_helpers';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            loadingBar: false
+        };
         const { dispatch } = this.props;
         dispatch(pathActions.pathChange(history.location));
         history.listen((location, action) => {
@@ -23,29 +29,42 @@ class App extends React.Component {
         });
     }
 
+    handleCloseSnackBar() {
+        //close things to do for warning
+    }
+
+    componentWillMount() {
+        store.subscribe(() => {
+            var data = store.getState();
+            if (data.loadingBar.loading != this.state.loadingBar) {
+                this.setState({loadingBar: data.loadingBar.loading});
+                this.render();
+            }
+        });
+    }
+    
     render() {
-        const { alert, location, path, authentication } = this.props;
+        let showAlert = false;
+        const { alert, location, path, authentication, loadingBar, store } = this.props;
+        if(alert.message) {
+            showAlert = true;
+        }
         return (
             <Router history={history}>
                 <div>
-                    {/* <Redirect from="/" to="/dashboard" /> */}
-                    <Route path="/" render={() => <MiniDrawer {...this.props} isAuthed={true} />}/> } />
-                    { (path && path.path === '/login' || path.path === '/register') 
-                    ?  <div className="jumbotron" >
-                        <div className="container">
-                            <div className="col-md-8 offset-md-2">
-                                {alert.message &&
-                                    <div className={`alert ${alert.type}`}>{alert.message}</div>
-                                }
-                                <div>
-                                    <Switch>
-                                        <Route path="/login" component={LoginPage} />
-                                        <Route path="/register" component={RegisterPage} />
-                                    </Switch>
-                                </div>
-                            </div>
-                        </div>
-                    </div> : ''}
+                 {this.state.loadingBar && <LinearProgress color="secondary"/>}
+                    <Route path="/" render={() => {
+                        if (!authentication.loggedIn) {
+                           return (<Switch>
+                            <Route path="/login" component={LoginPage} />
+                            <Route path="/register" component={RegisterPage} />
+                        </Switch>)
+                        } 
+                        else {
+                           return (<MiniDrawer {...this.props} isAuthed={true} />)
+                        }
+                    }}/> 
+                <Alert  open={showAlert} {...alert} variant={alert.type} message={alert.message}/>
                 </div>
             </Router>
         );
@@ -53,11 +72,12 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert, path, authentication } = state;
+    const { alert, path, authentication, loadingBar } = state;
     return {
         alert,
         path,
-        authentication
+        authentication,
+        loadingBar
     };
 }
 

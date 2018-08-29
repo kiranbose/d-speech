@@ -17,13 +17,15 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { history } from '../../_helpers';
-import { ListItemIcon, ListItemText, ListItem } from '@material-ui/core/';
+import { ListItemIcon, ListItemText, ListItem, Tooltip } from '@material-ui/core/';
 import { Person, ExitToApp, ViewCarousel, Voicemail } from '@material-ui/icons';
 import { VoicesPage } from '../VoicesPage/VoicesPage';
+import { pathActions, userActions } from '../../_actions';
 import { Router, Route, Switch } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import './app.scss'
+import { userService } from '../../_services';
 
 const drawerWidth = 240;
 
@@ -125,19 +127,16 @@ class MiniDrawer extends React.Component {
   };
 
   logout = () => {
+    this.props.dispatch(userActions.logout());
     history.push('/login');
   };
 
-  navigateToPage = (path) => {
-    history.push(path);
-  }
-
   checkPath(path) {
-    return this.props.path.path === path;
+    return this.props.path.page === path;
   }
 
   render() {
-    const { classes, theme, isAuthed } = this.props;
+    const { classes, theme, isAuthed, authentication } = this.props;
     const { anchorEl } = this.state;
     const open = Boolean(anchorEl);
 
@@ -162,7 +161,8 @@ class MiniDrawer extends React.Component {
             <div className="toolbar-buttons"></div>
             {isAuthed && (
               <div>
-                <IconButton
+                <Tooltip title={"Hi, " + authentication.user.firstName}>
+                 <IconButton
                   aria-owns={open ? 'menu-appbar' : null}
                   aria-haspopup="true"
                   onClick={this.handleMenu}
@@ -170,6 +170,7 @@ class MiniDrawer extends React.Component {
                 >
                   <AccountCircle />
                 </IconButton>
+                </Tooltip>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
@@ -197,6 +198,9 @@ class MiniDrawer extends React.Component {
                     <ListItemText primary="Logout" />
                   </MenuItem>
                 </Menu>
+                {/* <Typography variant="subheading" color="inherit" noWrap className={classNames(classes.typography)}>
+                  {authentication.user.firstName}
+                </Typography> */}
               </div>
             )}
           </Toolbar>
@@ -215,7 +219,7 @@ class MiniDrawer extends React.Component {
           </div>
           <Divider />
           <List>
-            <ListItem button className={this.checkPath('/dashboard') ? classNames(classes.active) : ''} onClick={() => { this.navigateToPage('/dashboard') }}>
+            <ListItem button className={this.checkPath('/dashboard') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/dashboard') }}>
               <ListItemIcon>
                 <ViewCarousel />
               </ListItemIcon>
@@ -224,7 +228,7 @@ class MiniDrawer extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button className={this.checkPath('/voices') ? classNames(classes.active) : ''} onClick={() => { this.navigateToPage('/voices') }}>
+            <ListItem button className={this.checkPath('/voices') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/voices') }}>
               <ListItemIcon>
                 <Voicemail />
               </ListItemIcon>
@@ -246,17 +250,14 @@ class MiniDrawer extends React.Component {
   }
 }
 
-export default withStyles(styles, { withTheme: true })(MiniDrawer);
+const StyleAttachedComponent = withStyles(styles, { withTheme: true })(MiniDrawer);
 
 
-// function mapStateToProps(state) {
-//   const { authentication, path } = state;
-//   return {
-//       authentication,
-//       classes: PropTypes.object.isRequired,
-//       theme: PropTypes.object.isRequired,
-//   };
-// }
+function mapStateToProps(state) {
+  const {  } = state;
+  return {
+      
+  };
+}
 
-// const connectedDrawer = connect(mapStateToProps)(MiniDrawer);
-// export { connectedDrawer as MiniDrawer }; 
+export default connect(mapStateToProps)(StyleAttachedComponent);

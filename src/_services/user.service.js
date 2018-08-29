@@ -1,7 +1,6 @@
 import config from 'config';  //global variables - set shared variables in webpack.config
 import { authHeader } from '../_helpers';
 import { commonHandlers } from './index'
-
 export const userService = {
     login,
     logout,
@@ -21,7 +20,6 @@ function login(email, password) {
         body: JSON.stringify({ email, password }),
         credentials: 'same-origin'
     };
-
     return fetch(`${config.apiUrl}/login`, requestOptions)
         .then(commonHandlers.handleAuthentication)
         .then(user => {
@@ -47,7 +45,6 @@ function getAll() {
         headers: authHeader(),
         credentials: 'same-origin'
     };
-
     return fetch(`${config.apiUrl}/users`, requestOptions).then(commonHandlers.handleAuthentication);
 
     // return fetch(`${config.apiUrl}/users`).then(u => console(u)).then(user => {
@@ -73,7 +70,6 @@ function register(user) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     };
-
     return fetch(`${config.apiUrl}/register`, requestOptions).then(commonHandlers.handleAuthentication);
 }
 

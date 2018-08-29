@@ -1,5 +1,7 @@
 export * from './user.service';
 export * from './record.service';
+import config from 'config';  //global variables - set shared variables in webpack.config
+import { loadingBarActions } from '../_actions'
 
 export const commonHandlers = {
     handleAuthentication,
@@ -19,7 +21,6 @@ function handleAuthentication(response) {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
         }
-
         return data;
     });
 }

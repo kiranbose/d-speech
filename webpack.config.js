@@ -104,7 +104,9 @@ module.exports = function webpackConfig() {
       // global app config object
       config: JSON.stringify({
           apiUrl: flaskEndPoint,
-          permission: 'guest'
+          permission: 'guest',
+          loadingBar: false,
+          showAlert: false
     })
   }
   };
