@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { store } from './_helpers';
-import { App } from './components/App';
+import  App  from './components/App/App';
 import './dependencies'
 import './style.scss'
 
@@ -34,7 +34,7 @@ export const theme = createMuiTheme({
 render(
     <Provider store={store}>
         <MuiThemeProvider theme={theme}>
-        <App store={store}/>
+        <App/>
         </MuiThemeProvider>
     </Provider>,
     document.getElementById('app')
