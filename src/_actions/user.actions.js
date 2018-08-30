@@ -2,7 +2,7 @@ import { userConstants } from '../_constants';
 import { userService } from '../_services';
 import { alertActions } from './';
 import { history } from '../_helpers';
-
+import { loadingBarActions } from './loadingBar.actions'
 export const userActions = {
     login,
     logout,
@@ -14,14 +14,16 @@ export const userActions = {
 function login(username, password) {
     return dispatch => {
         dispatch(request({ username }));
-
+        dispatch(loadingBarActions.startLoadingBar());
         userService.login(username, password)
-            .then(
-                user => { 
+        .then(
+            user => { 
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(success(user));
                     history.push('/dashboard');
                 },
                 error => {
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
@@ -40,16 +42,18 @@ function logout() {
 
 function register(user) {
     return dispatch => {
+        dispatch(loadingBarActions.startLoadingBar());
         dispatch(request(user));
-
         userService.register(user)
             .then(
                 user => { 
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(success());
                     history.push('/login');
                     dispatch(alertActions.success('Registration successful'));
                 },
                 error => {
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(failure(error.toString()));
                     dispatch(alertActions.error(error.toString()));
                 }
@@ -64,11 +68,17 @@ function register(user) {
 function getAll() {
     return dispatch => {
         dispatch(request());
-
+        dispatch(loadingBarActions.startLoadingBar());
         userService.getAll()
             .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error.toString()))
+                users => {
+                    dispatch(loadingBarActions.stopLoadingBar());
+                    dispatch(success(users));
+                },
+                error => {
+                    dispatch(loadingBarActions.stopLoadingBar());                
+                    dispatch(failure(error.toString()));
+                }
             );
     };
 
@@ -77,7 +87,7 @@ function getAll() {
     function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
 }
 
-// prefixed function name with underscore because delete is a reserved word in javascript
+// prefixed function name with underscore because delete is a reserved word in javascript -- can be used if we need to delete user
 function _delete(id) {
     return dispatch => {
         dispatch(request(id));

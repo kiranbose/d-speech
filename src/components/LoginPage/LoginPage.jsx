@@ -1,10 +1,59 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import { userActions } from '../../_actions';
+import { userActions, pathActions } from '../../_actions';
+import { withStyles } from '@material-ui/core/styles';
+import compose from 'recompose/compose';
+import classNames from 'classnames';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import FormControl from '@material-ui/core/FormControl';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import LockIcon from '@material-ui/icons/LockOutlined';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import { Grid, TextField } from '@material-ui/core';
+import { AccountCircle } from '@material-ui/icons';
 import './login.scss'
 
+const styles = theme => ({
+    layout: {
+      width: 'auto',
+      display: 'block', // Fix IE11 issue.
+      marginLeft: theme.spacing.unit * 3,
+      marginRight: theme.spacing.unit * 3,
+      [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+        width: 400,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
+    },
+    paper: {
+      marginTop: theme.spacing.unit * 8,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    },
+    avatar: {
+      margin: theme.spacing.unit,
+      backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+      width: '100%', // Fix IE11 issue.
+      marginTop: theme.spacing.unit,
+    },
+    submit: {
+      marginTop: theme.spacing.unit * 3,
+    },
+    paperBackground: {
+      backgroundColor: theme.palette.primary.main
+    }
+  });
+  
+  
 class LoginPage extends React.Component {
     constructor(props) {
         super(props);
@@ -39,50 +88,71 @@ class LoginPage extends React.Component {
     }
 
     render() {
-        const { loggingIn } = this.props;
+        const { loggingIn, classes, authentication } = this.props;
         const { email, password, submitted } = this.state;
+        if(authentication.loggedIn) {
+          pathActions.navigateToPage('/dashboard');
+        }
         return (
-            <div className="login-container container">
-                <div className="col-md-6 offset-md-3 heading">
-                    <h1>D.Speech</h1>
-                </div>
-                <div className="col-md-6 offset-md-3">
-                    <h3>Login</h3>
-                    <form name="form" onSubmit={this.handleSubmit}>
-                        <div className={'form-group' + (submitted && !email ? ' has-error' : '')}>
-                            <label htmlFor="email">E-mail</label>
-                            <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange} />
-                            {submitted && !email &&
-                                <div className="help-block">E-mail is required</div>
-                            }
-                        </div>
-                        <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
-                            <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange} />
-                            {submitted && !password &&
-                                <div className="help-block">Password is required</div>
-                            }
-                        </div>
-                        <div className="form-group">
-                            <button className="btn btn-dark">Login</button>
-                            {loggingIn &&
-                                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                            }
-                            <Link to="/register" className="btn btn-link">Register</Link>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <React.Fragment>
+            <CssBaseline />
+            <main className={classes.layout}>
+              <Paper className={classes.paper}>
+                <Typography variant="headline">D.Speech</Typography>
+                <Avatar className={classes.avatar}>
+                  <LockIcon />
+                </Avatar>
+                <Typography variant="subheading">Sign in</Typography>
+                <form className={classes.form} onSubmit={this.handleSubmit}>
+                  <FormControl margin="normal" required fullWidth>
+                    <InputLabel htmlFor="email">Email Address</InputLabel>
+                    <Input id="email" type="email" name="email" autoComplete="email" autoFocus value={this.state.email} onChange={this.handleChange}/>
+                  </FormControl>
+                  <FormControl margin="normal" required fullWidth>
+                    <InputLabel htmlFor="password">Password</InputLabel>
+                    <Input
+                      name="password"
+                      type="password"
+                      id="password"
+                      autoComplete="current-password"
+                      value={this.state.password} onChange={this.handleChange}
+                    />
+                  </FormControl>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="raised"
+                    color="primary"
+                    className={classes.submit}
+                    onClick={this.handleSubmit}
+                  >
+                    Sign in
+                  </Button>
+                  <br/> <br/>
+                  <Button fullWidth variant="outlined" color="secondary" onClick={() => pathActions.navigateToPage('/register')}>
+                    Register
+                  </Button>
+                </form>
+              </Paper>
+            </main>
+          </React.Fragment>
         );
     }
 }
 
 function mapStateToProps(state) {
-    const { loggingIn } = state.authentication;
+    const { authentication } = state;
+    const loggingIn = true;
     return {
-        loggingIn
+        loggingIn,
+        styles,
+        authentication
     };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
-export { connectedLoginPage as LoginPage }; 
+export default compose(
+    withStyles(styles, { name: 'LoginPage' }),
+    connect(mapStateToProps, null)
+  )(LoginPage);
+
+

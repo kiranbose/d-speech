@@ -1,17 +1,49 @@
 import React from 'react';
 import { Router, Route, Switch, Redirect, IndexRoute } from 'react-router-dom';
 import { connect } from 'react-redux';
-
+import config from 'config';
 import { history } from '../../_helpers';
 import { alertActions, pathActions } from '../../_actions';
 import { PrivateRoute } from '../../components';
-import { HomePage } from '../HomePage';
-import { LoginPage } from '../LoginPage';
-import { RegisterPage } from '../RegisterPage';
+import MiniDrawer from './AppBar';
+import LoginPage from '../LoginPage/LoginPage';
+import RegisterPage from '../RegisterPage/RegisterPage';
 import './app.scss'
-import { VoicesPage } from '../voicesPage';
+import { VoicesPage } from '../VoicesPage';
+import { LinearProgress, Button } from '@material-ui/core';
+import Alert from './SnackBarContent';
+import { store } from '../../_helpers';
+import compose from 'recompose/compose';
+import { withStyles } from '@material-ui/core/styles';
+import { Add } from '@material-ui/icons';
+import DialogPopup from '../Dialog/Dialog';
+
+const styles = theme => ({
+    paperBackground: {
+        // backgroundColor: theme.palette.primary.main,
+        // height: '100%',
+        // display: 'flex',
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // overflow: 'auto',
+        // padding: '5%'
+    },
+    fab: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 2,
+        right: theme.spacing.unit * 2,
+        color: theme.palette.common.white,
+        zIndex: '200',
+        backgroundColor: theme.palette.primary.main
+    }
+});
+
 
 class App extends React.Component {
+    state = {
+        loadingBar: false,
+        openDialog: false
+    };
     constructor(props) {
         super(props);
         const { dispatch } = this.props;
@@ -23,28 +55,60 @@ class App extends React.Component {
         });
     }
 
+    handleCloseSnackBar = () =>{
+        //close things to do for warning
+    }
+
+    handleDialogClose = () =>{
+        // Dialog close actions
+        this.setState({openDialog: false});
+    }
+
+    openDialog = () =>{
+        this.setState({openDialog: true});
+    }
+
+    componentWillMount() {
+        store.subscribe(() => {
+            var data = store.getState();
+            if (data.loadingBar.loading != this.state.loadingBar) {
+                this.setState({loadingBar: data.loadingBar.loading});
+                this.render();
+            }
+        });
+    }
+    
     render() {
-        const { alert, location, path } = this.props;
+        let showAlert = false;
+        const { alert, location, path, authentication, loadingBar, store, classes } = this.props;
+        if(alert.message) {
+            showAlert = true;
+        }
         return (
             <Router history={history}>
-                <div>
-                    <PrivateRoute path="/dashboard" component={HomePage}/>
-                    { (path && path.path === '/login' || path.path === '/register') 
-                    ?  <div className="jumbotron" >
-                        <div className="container">
-                            <div className="col-md-8 offset-md-2">
-                                {alert.message &&
-                                    <div className={`alert ${alert.type}`}>{alert.message}</div>
-                                }
-                                <div>
-                                    <Switch>
-                                        <Route path="/login" component={LoginPage} />
-                                        <Route path="/register" component={RegisterPage} />
-                                    </Switch>
-                                </div>
-                            </div>
-                        </div>
-                    </div> : ''}
+                <div className={(path && (path.page === '/login' || path.page === '/register')) ? classes.paperBackground : undefined}>
+                 {this.state.loadingBar && <LinearProgress color="secondary"/>}
+                    <Route path="/" render={() => {
+                        if (!authentication.loggedIn) {
+                           return (<Switch>
+                            <Route path="/login" component={LoginPage} />
+                            <Route path="/register" component={RegisterPage} />
+                        </Switch>)
+                        } 
+                        else {
+                           return (<MiniDrawer {...this.props} isAuthed={true} />)
+                        }
+                    }}/> 
+                <Alert  open={showAlert} {...alert} variant={alert.type} message={alert.message}/>
+                <DialogPopup open={this.state.openDialog} 
+                    title="Record"
+                    onClose={this.handleDialogClose}/> 
+                {(authentication.loggedIn) ?
+                        <Button variant="fab" className={classes.fab} color='secondary' onClick={this.openDialog}>
+                            <Add/>
+                        </Button>
+                    : ''
+                }
                 </div>
             </Router>
         );
@@ -52,12 +116,21 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { alert, path } = state;
+    const { alert, path, authentication, loadingBar } = state;
     return {
         alert,
-        path
+        path,
+        authentication,
+        loadingBar
     };
 }
 
-const connectedApp = connect(mapStateToProps)(App);
-export { connectedApp as App }; 
+// const connectedApp = connect(mapStateToProps)(App);
+// export { connectedApp as App }; 
+
+export default compose(
+    withStyles(styles, { name: 'App' }),
+    connect(mapStateToProps, null)
+  )(App);
+
+
