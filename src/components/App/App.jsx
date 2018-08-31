@@ -16,7 +16,7 @@ import { store } from '../../_helpers';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 import { Add } from '@material-ui/icons';
-import DialogPopup from '../Dialog/Dialog';
+import Dialog from '../Dialog/Dialog';
 
 const styles = theme => ({
     paperBackground: {
@@ -100,9 +100,10 @@ class App extends React.Component {
                         }
                     }}/> 
                 <Alert  open={showAlert} {...alert} variant={alert.type} message={alert.message}/>
-                <DialogPopup open={this.state.openDialog} 
+                <Dialog open={this.state.openDialog} 
                     title="Record"
-                    onClose={this.handleDialogClose}/> 
+                    onClose={this.handleDialogClose}
+                    /> 
                 {(authentication.loggedIn) ?
                         <Button variant="fab" className={classes.fab} color='secondary' onClick={this.openDialog}>
                             <Add/>
