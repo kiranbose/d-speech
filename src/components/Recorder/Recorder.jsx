@@ -161,9 +161,15 @@ function mapStateToProps(state) {
 // const connectedApp = connect(mapStateToProps)(App);
 // export { connectedApp as App }; 
 
-export default compose(
-    withStyles(styles, { name: 'Recorder' }),
-    connect(mapStateToProps, null)
-  )(Recorder);
+// export default compose(
+//     withStyles(styles, { name: 'Recorder' }),
+//     connect(mapStateToProps, null, null, {withRef: true})
+//   )(Recorder);
 
+
+  
+const StyleAttachedComponent = withStyles(styles, { withTheme: true })(Recorder);
+
+
+export default connect(mapStateToProps)(StyleAttachedComponent);
 

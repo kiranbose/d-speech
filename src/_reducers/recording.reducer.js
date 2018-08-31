@@ -8,6 +8,9 @@ export function recordings(state = {}, action) {
     case recordingConstants.stop:
       state.recordings = action.data;
       return state;
+    case recordingConstants.clear:
+      state.recordings = action.data;
+      return state;
     case recordingConstants.send:
       return { 
         ...state,

@@ -8,6 +8,8 @@ import blue from '@material-ui/core/colors/blue';
 import compose from 'recompose/compose';
 import { connect } from 'react-redux';
 import Recorder from '../Recorder/Recorder'
+import { recordActions } from  '../../_actions'
+import { store } from '../../_helpers';
 
 const styles = theme => ({
     avatar: {
@@ -17,16 +19,46 @@ const styles = theme => ({
 });
 
 class DialogPopup extends React.Component {
-  handleSave = () => {
-    this.props.onSave(this.props.recordings);
+  state = {
+    recordings: {}
+  }
+  constructor(props) {
+    super(props);
+    this.recorderChild = React.createRef();
+    this.setState({ recordings: {} })
+  }
+
+  handleSave = () => {  
+    this.onSave();
+    this.props.onClose();
   };
 
-  handleListItemClick = value => {
-    this.props.onClose(value);
-  };
+  
+  onSave = () => {
+    /**
+     * code to upload file to server
+     */    
+    const record = this.props.recordings.recordings;
+    if (!record.recording && record.blob) {
+        let blobObject = record.blob;
+        this.props.dispatch(recordActions.saveRecording(blobObject));
+        this.props.dispatch(recordActions.clearRecording());
+    }
+}
+
+componentWillMount() {
+  store.subscribe(() => {
+      var data = store.getState();
+      if (data.recordings.recordings != this.state.recordings) {
+        this.setState({recordings: data.recordings.recordings});
+        this.render();
+      }
+  });
+}
+
 
   render() {
-    const { open, classes, onClose, onSave, recordings, title } = this.props;
+    const { open, classes, onClose, recordings, title } = this.props;
 
     return (
       <Dialog maxWidth='md' onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={open}>
@@ -35,11 +67,11 @@ class DialogPopup extends React.Component {
                 <Recorder />
            </DialogContent>
            <DialogActions>
-                <Button onClick={onClose} color="primary">
-                Cancel
+                <Button onClick={() => { onClose(); this.props.dispatch(recordActions.clearRecording()) }} color="secondary">
+                  Cancel
                 </Button>
-                <Button disabled={!recordings} onClick={this.handleSave} color="primary">
-                Save
+                <Button disabled={recordings.hasOwnProperty('blob')} onClick={this.handleSave} color="primary">
+                  Save
                 </Button>
           </DialogActions>
       </Dialog>

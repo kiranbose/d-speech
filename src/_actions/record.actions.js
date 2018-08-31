@@ -5,7 +5,8 @@ import { history } from '../_helpers';
 export const recordActions = {
     saveRecording,
     startRecording,
-    stopRecording
+    stopRecording,
+    clearRecording
 };
 
 function saveRecording(recording) {
@@ -16,6 +17,7 @@ function saveRecording(recording) {
             .then(
                 response => { 
                     dispatch(postRecordSuccess(response));
+                    dispatch(alertActions.success('Recording Saved'));
                     // history.push('/dashboard');
                 },
                 error => {
@@ -39,8 +41,15 @@ function stopRecording(data = {}) {
     }
 }
 
+function clearRecording() {
+    return dispatch => {
+        dispatch(clearRecord({}))
+    }
+}
+
 function startRecord(data) { return { type: recordingConstants.start, data } }
 function stopRecord(data) { return { type: recordingConstants.stop, data } }
+function clearRecord(data) { return { type: recordingConstants.clear, data } }
 function postRecord(data) { return { type: recordingConstants.send, data } }
 function postRecordSuccess(data) { return { type: recordingConstants.send_success, data } }
 function postRecordFail(data) { return { type: recordingConstants.send_fail, data } }
@@ -51,5 +60,6 @@ export const recordingConstants = {
     stop: 'stop_recording',
     send: 'post_recording',
     send_success: 'post_recording_success',
+    clear: 'clear_recording',
     send_fail: 'post_recording_fail'
 }
