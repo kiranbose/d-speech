@@ -64,15 +64,15 @@ componentWillMount() {
       <Dialog maxWidth='md' onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={open}>
         <DialogTitle id="simple-dialog-title">{title}</DialogTitle>
            <DialogContent>
-                <Recorder />
+              <Recorder />
            </DialogContent>
            <DialogActions>
-                <Button onClick={() => { onClose(); this.props.dispatch(recordActions.clearRecording()) }} color="secondary">
-                  Cancel
-                </Button>
-                <Button disabled={recordings.hasOwnProperty('blob')} onClick={this.handleSave} color="primary">
-                  Save
-                </Button>
+              <Button onClick={() => { onClose(); this.props.dispatch(recordActions.clearRecording()) }} color="secondary">
+                Cancel
+              </Button>
+              <Button disabled={!(recordings.recordings && recordings.recordings.hasOwnProperty('blob'))} onClick={this.handleSave} color="primary">
+                Save
+              </Button>
           </DialogActions>
       </Dialog>
     );
