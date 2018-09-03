@@ -27,8 +27,10 @@ class CompareVoices extends React.Component {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
         store.subscribe(() => {
             var data = store.getState();
-            this.setState({ data: data.audioFiles.audioFiles.result });            
-            this.render();
+            if (data.audioFiles.hasOwnProperty('audioFiles')) {
+                this.setState({ data: data.audioFiles.audioFiles.result });            
+                this.render();
+            }
         });
     }
 

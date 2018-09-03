@@ -25,7 +25,6 @@ class DialogPopup extends React.Component {
   constructor(props) {
     super(props);
     this.recorderChild = React.createRef();
-    this.setState({ recordings: {} })
   }
 
   handleSave = () => {  

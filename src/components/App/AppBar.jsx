@@ -37,6 +37,7 @@ const styles = theme => ({
     overflow: 'hidden',
     position: 'relative',
     display: 'flex',
+    minHeight: window.innerHeight
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -90,7 +91,7 @@ const styles = theme => ({
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 3
   },
   typography: {
     width: '100%'

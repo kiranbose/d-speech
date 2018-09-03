@@ -90,13 +90,23 @@ class App extends React.Component {
                  {this.state.loadingBar && <LinearProgress color="secondary"/>}
                     <Route path="/" render={() => {
                         if (!authentication.loggedIn) {
-                           return (<Switch>
-                            <Route path="/login" component={LoginPage} />
-                            <Route path="/register" component={RegisterPage} />
-                        </Switch>)
+                           return (
+                            <div>
+                                <Redirect to="/login"/>
+                                <Switch>
+                                    <Route path="/login" component={LoginPage} />
+                                    <Route path="/register" component={RegisterPage} />
+                                </Switch>
+                            </div>
+                            )
                         } 
                         else {
-                           return (<MiniDrawer {...this.props} isAuthed={true} />)
+                           return (
+                            <div>
+                                <Redirect to="/dashboard"/>
+                                <MiniDrawer {...this.props} isAuthed={true} />
+                            </div>
+                                )
                         }
                     }}/> 
                 <Alert  open={showAlert} {...alert} variant={alert.type} message={alert.message}/>
