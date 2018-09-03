@@ -27,8 +27,10 @@ class CompareVoices extends React.Component {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
         store.subscribe(() => {
             var data = store.getState();
-            this.setState({ data: data.audioFiles.audioFiles.result });            
-            this.render();
+            if (data.audioFiles.hasOwnProperty('audioFiles')) {
+                this.setState({ data: data.audioFiles.audioFiles.result });            
+                this.render();
+            }
         });
     }
 
@@ -45,7 +47,7 @@ class CompareVoices extends React.Component {
     }
 
     render() {
-            const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.usertype === "system") : [];
+            const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
             const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
                 <TableRow key={audio._id.$oid}>
                     <TableCell>
@@ -60,7 +62,7 @@ class CompareVoices extends React.Component {
                     <TableCell>{audio.fileName}</TableCell>
                 </TableRow>
             );
-            const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.usertype === "normal") : [];
+            const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
             const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
                 <TableRow key={audio._id.$oid}>
                     <TableCell>

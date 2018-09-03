@@ -1,6 +1,7 @@
 import { recordService } from '../_services';
 import { alertActions } from './';
 import { history } from '../_helpers';
+import { loadingBarActions } from './loadingBar.actions'
 
 export const recordActions = {
     saveRecording,
@@ -12,16 +13,19 @@ export const recordActions = {
 function saveRecording(recording) {
     return dispatch => {
         dispatch(postRecord(recording));
-
+        dispatch(loadingBarActions.startLoadingBar());
         recordService.postRecording(recording)
             .then(
                 response => { 
                     dispatch(postRecordSuccess(response));
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(alertActions.success('Recording Saved'));
+                    dispatch(clearRecording());
                     // history.push('/dashboard');
                 },
                 error => {
                     dispatch(postRecordFail(error.toString()));
+                    dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(alertActions.error(error.toString()));
                 }
             );

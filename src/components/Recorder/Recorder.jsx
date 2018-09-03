@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ReactMic } from 'react-mic';
 import { recordActions, recordingConstants } from '../../_actions';
 import { Button, Grid } from '@material-ui/core';
-import { Mic, Stop, Save } from '@material-ui/icons';
+import { Mic, Stop, Save, CloudUpload } from '@material-ui/icons';
 import compose from 'recompose/compose';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -19,10 +19,17 @@ const styles = theme => ({
     },
     recordingContainer: {
         position: 'relative'
+    },
+    fileUploadinput: {
+        display: 'none'
+    },
+    extendedIcon: {
+       marginRight: theme.spacing.unit
     }
 });
 
 class Recorder extends React.Component {
+    _input;
     constructor(props) {
         super(props);
         this.state = {
@@ -63,32 +70,18 @@ class Recorder extends React.Component {
 
 
     onSave = () => {
-        /**
-         * code to upload file to server
-         */
-        // const data = new FormData();    
-        // data.append('file', this.waveInterface.audioData, this.state.filename)
-        // // TODO: Set user, usertype dynamically
-        // data.append('username', 'Ram')
-        // data.append('usertype', 'normal')
-        // const settings = { headers: { 'content-type': 'multipart/form-data' } };
-        
         if (!this.state.recording && this.state.blob) {
             let blobObject = this.state.blob;
-            // let a = document.createElement("a");
-            // a.href = blobObject.blobURL;
-            // a.download = "file.wav";
-            // a.click();
-            // window.URL.revokeObjectURL(blobObject.blobURL);
             this.props.dispatch(recordActions.saveRecording(blobObject));
-            this.setState({blob: null})
+            this.setState({blob: {blob: null}})
         }
 
+    }
 
-        // axios.post(App.apis.upload, data, settings).then((res) => {
-        //   this.onRemoveClick();
-        //   return 'upload success'
-        // })
+    handleFileUploadURL = (url) => {
+        let blobObj = {blob: url.currentTarget.files[0]};
+        this.setState(blobObj);
+        this.props.dispatch(recordActions.stopRecording({'recording': false, blob: blobObj}));
     }
 
 
@@ -98,12 +91,12 @@ class Recorder extends React.Component {
 
             <Grid
             container
-            spacing={24}
+            spacing={40}
             alignItems="center"
             direction="column"
-            justify="center"
+            justify="space-evenly"
             >
-            <div className={classes.recordingContainer}>
+            <Grid className={classes.recordingContainer}>
                 <Grid item md xs={12}>
                     <ReactMic
                         height={200}
@@ -127,7 +120,26 @@ class Recorder extends React.Component {
                     <Stop/>
                 </Button>
                 }
-            </div> 
+            </Grid> 
+
+            <Grid item>
+                <input
+                    accept="audio/*"
+                    className={classes.fileUploadinput}
+                    id="contained-button-file"
+                    type="file"
+                    onChange={this.handleFileUploadURL}
+                    ref={c => (this._input = c)}
+                />
+                <label htmlFor="contained-button-file">
+                    <Button variant="contained" color="secondary" className={classes.button} component="span" onClick={() => {
+                                this.props.dispatch(recordActions.startRecording({'recording': true}));
+                    }}>
+                        <CloudUpload className={classes.extendedIcon} />
+                            Upload a File
+                    </Button>
+                </label>
+            </Grid>
 
             </Grid>
             // <div className="jumbotron">
