@@ -126,7 +126,7 @@ class Alert extends React.Component {
               horizontal: 'left',
             }}
             open={open}
-            autoHideDuration={5000}
+            autoHideDuration={3000}
             onClose={this.handleClose}
           >
             <MySnackbarContentWrapper

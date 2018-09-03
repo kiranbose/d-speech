@@ -9,9 +9,8 @@ export const audioFilesService = {
 function getUserAudioFiles() {
     let email = JSON.parse(localStorage.getItem('user')).email;
     const requestOptions = {
-        method: 'POST',
-        headers: { ...authHeader(), 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        method: 'GET',
+        headers: authHeader(),
         credentials: 'same-origin'
     };
     return fetch(`${config.apiUrl}/getUserAudioFiles`, requestOptions)
