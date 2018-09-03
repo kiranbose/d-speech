@@ -6,6 +6,7 @@ import { users } from './users.reducer';
 import { alert } from './alert.reducer';
 import { recordings } from './recording.reducer';
 import { loadingBar } from './loadingBar.reducer';
+import { audioFiles } from './audioFiles.reducer';
 import { path } from '../_actions';
 
 const rootReducer = combineReducers({
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
   alert,
   path,
   recordings,
-  loadingBar
+  loadingBar,
+  audioFiles
 });
 
 export default rootReducer;

@@ -13,12 +13,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Dashboard } from '../Dashboard/Dashboard'
+import { CompareVoices } from '../CompareVoices/CompareVoices'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { history } from '../../_helpers';
 import { ListItemIcon, ListItemText, ListItem, Tooltip } from '@material-ui/core/';
-import { Person, ExitToApp, ViewCarousel, Voicemail } from '@material-ui/icons';
+import { Person, ExitToApp, ViewCarousel, Voicemail, GraphicEq } from '@material-ui/icons';
 import { VoicesPage } from '../VoicesPage/VoicesPage';
 import { pathActions, userActions } from '../../_actions';
 import { Router, Route, Switch } from 'react-router-dom';
@@ -32,7 +33,6 @@ const drawerWidth = 240;
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 440,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -235,13 +235,24 @@ class MiniDrawer extends React.Component {
               <ListItemText primary="Recordings" />
             </ListItem>
           </List>
+          <Divider />
+          <List>
+            <ListItem button className={this.checkPath('/compareVoices') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/compareVoices') }}>
+              <ListItemIcon>
+                <GraphicEq />
+              </ListItemIcon>
+              <ListItemText primary="Compare Voices" />
+            </ListItem>
+          </List>
         </Drawer>
+        
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Router history={history}>
             <Switch>
               <Route path={"/dashboard"} component={Dashboard} />
               <Route path={"/voices"} component={VoicesPage} />
+              <Route path={"/compareVoices"} component={CompareVoices} />
             </Switch>
           </Router>
         </main>
