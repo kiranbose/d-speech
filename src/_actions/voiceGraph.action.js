@@ -14,7 +14,7 @@ function getFileData(fileName1, fileName2) {
     };        
 }
 
-function success(data) { return { type: voiceGrpahConstants.getFileData, data } }
+function success(data) { return { type: voiceGraphConstants.getFileData, data } }
 
 export const voiceGraphConstants = {
     getFileData: 'get_file_data'
