@@ -1,6 +1,7 @@
 export * from './user.service';
 export * from './record.service';
 export * from './audioFiles.service';
+export * from './voiceGraph.service';
 import config from 'config';  //global variables - set shared variables in webpack.config
 import { loadingBarActions } from '../_actions'
 
