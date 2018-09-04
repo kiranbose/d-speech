@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import { Dashboard } from '../Dashboard/Dashboard'
+import Dashboard from '../Dashboard/Dashboard'
 import { CompareVoices } from '../CompareVoices/CompareVoices'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
@@ -98,6 +98,14 @@ const styles = theme => ({
   },
   active: {
     backgroundColor: 'lightgray',
+  },
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2,
+    color: theme.palette.common.white,
+    zIndex: '200',
+    backgroundColor: theme.palette.primary.main
   }
 });
 
