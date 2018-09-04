@@ -14,7 +14,7 @@ class VoiceGraph extends React.Component {
 
     componentDidMount() {
         this.props.dispatch(voiceGraphActions.getFileData('C:/FI_2018/speech-recog/flaskMiddleWare/uploads/Recording1.wav', 'C:/FI_2018/speech-recog/flaskMiddleWare/uploads/Recording2.wav')); 
-        this.renderChart();
+        // this.renderChart();
     }
 
     render() {

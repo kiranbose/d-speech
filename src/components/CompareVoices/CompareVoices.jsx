@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './comparevoices.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import GraphicEq from "@material-ui/icons/GraphicEq";
 
 
@@ -20,7 +20,7 @@ class CompareVoices extends React.Component {
     }
 
     componentWillUnmount(){
-        store.unsubscribe();
+        // store.unsubscribe();
     }
 
     componentDidMount() {
@@ -59,7 +59,7 @@ class CompareVoices extends React.Component {
                             name="radio-button-demo"
                         />
                     </TableCell>
-                    <TableCell>{audio.user}</TableCell>
+                    <TableCell>{audio.user.firstName}</TableCell>
                     <TableCell>{audio.fileName}</TableCell>
                 </TableRow>
             );
@@ -74,7 +74,7 @@ class CompareVoices extends React.Component {
                             name="radio-button-demo"
                         />
                     </TableCell>
-                    <TableCell>{audio.user}</TableCell>
+                    <TableCell>{audio.user.firstName}</TableCell>
                     <TableCell>{audio.fileName}</TableCell>
                 </TableRow>
             );
@@ -83,12 +83,14 @@ class CompareVoices extends React.Component {
             <div>
                 <div className="height">
                     <div className="align-left align-text">
-                        <h2>Sample voice records</h2>
+                    <Typography variant="Headline">
+                        Sample voice records
+                    </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
                                     <TableCell>Select</TableCell>
-                                    <TableCell>Username</TableCell>
+                                    <TableCell>User</TableCell>
                                     <TableCell>Recorded File</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -98,12 +100,14 @@ class CompareVoices extends React.Component {
                         </Table>
                     </div>
                     <div className="align-right align-text">
-                        <h2>User Voices records</h2>
+                        <Typography variant="Headline">
+                            User Voices records
+                        </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
                                     <TableCell>Select</TableCell>
-                                    <TableCell>Username</TableCell>
+                                    <TableCell>User</TableCell>
                                     <TableCell>Recorded File</TableCell>
                                 </TableRow>
                             </TableHead>

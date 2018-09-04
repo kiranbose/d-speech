@@ -60,10 +60,10 @@ class Dashboard extends React.Component {
                     return (
                 <Card className={classes.card}>
                     <CardContent>
-                        <Typography className={classes.title} color="textPrimary">
+                        <Typography variant="subheading" color="textPrimary">
                         {card.title}
                         </Typography>
-                        <Typography component="h1" className={classes.numberDisplay}>
+                        <Typography variant="title">
                         {card.count}
                         </Typography>
                     </CardContent>
