@@ -19,9 +19,9 @@ class CompareVoices extends React.Component {
         };
     }
 
-    // componentDidMount() {
-    //     this.props.dispatch(audioFileActions.getUserAudioFiles());
-    // }
+    componentWillUnmount(){
+        store.unsubscribe();
+    }
 
     componentDidMount() {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
@@ -38,6 +38,7 @@ class CompareVoices extends React.Component {
         this.setState({
             selectedSampleVoice: event.target.value
         });
+        this.props.dispatch()
     }
 
     handleUserVoiceChange(event) {
