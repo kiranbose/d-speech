@@ -19,16 +19,12 @@ class CompareVoices extends React.Component {
         };
     }
 
-    componentWillUnmount(){
-        store.unsubscribe();
-    }
-
     componentDidMount() {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
         store.subscribe(() => {
             var data = store.getState();
             if (data.audioFiles.hasOwnProperty('audioFiles')) {
-                this.setState({ data: data.audioFiles.audioFiles.result });            
+                this.setState({ data: data.audioFiles.audioFiles.result });
                 this.render();
             }
         });
@@ -38,46 +34,47 @@ class CompareVoices extends React.Component {
         this.setState({
             selectedSampleVoice: event.target.value
         });
-        this.props.dispatch()
+        this.props.audioFiles.selectedSampleVoice = event.target.value;
     }
 
     handleUserVoiceChange(event) {
         this.setState({
             selectedUserVoice: event.target.value
         });
+        this.props.audioFiles.selectedUserVoice = event.target.value;
     }
 
     render() {
-            const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
-            const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
-                <TableRow key={audio._id.$oid}>
-                    <TableCell>
-                        <Radio
-                            checked={this.state.selectedSampleVoice === audio.fileName}
-                            onChange={this.handleSampleVoiceChange}
-                            value={audio.fileName}
-                            name="radio-button-demo"
-                        />
-                    </TableCell>
-                    <TableCell>{audio.user}</TableCell>
-                    <TableCell>{audio.fileName}</TableCell>
-                </TableRow>
-            );
-            const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
-            const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
-                <TableRow key={audio._id.$oid}>
-                    <TableCell>
-                        <Radio
-                            checked={this.state.selectedUserVoice === audio.fileName}
-                            onChange={this.handleUserVoiceChange}
-                            value={audio.fileName}
-                            name="radio-button-demo"
-                        />
-                    </TableCell>
-                    <TableCell>{audio.user}</TableCell>
-                    <TableCell>{audio.fileName}</TableCell>
-                </TableRow>
-            );
+        const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
+        const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>
+                    <Radio
+                        checked={this.state.selectedSampleVoice === audio.stereoFilePath}
+                        onChange={this.handleSampleVoiceChange}
+                        value={audio.stereoFilePath}
+                        name="radio-button-demo"
+                    />
+                </TableCell>
+                <TableCell>{audio.user}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+            </TableRow>
+        );
+        const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
+        const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>
+                    <Radio
+                        checked={this.state.selectedUserVoice === audio.stereoFilePath}
+                        onChange={this.handleUserVoiceChange}
+                        value={audio.stereoFilePath}
+                        name="radio-button-demo"
+                    />
+                </TableCell>
+                <TableCell>{audio.user}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+            </TableRow>
+        );
         // }
         return (
             <div>
