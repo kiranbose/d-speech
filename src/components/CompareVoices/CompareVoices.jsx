@@ -60,7 +60,7 @@ class CompareVoices extends React.Component {
                         name="radio-button-demo"
                     />
                 </TableCell>
-                <TableCell>{audio.user.fistName}</TableCell>
+                <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
             </TableRow>
         );
