@@ -14,7 +14,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Dashboard from '../Dashboard/Dashboard'
 import { CompareVoices } from '../CompareVoices/CompareVoices'
-import { VoiceGraph } from '../VoiceGraph/VoiceGraph'
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -238,15 +237,6 @@ class MiniDrawer extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button className={this.checkPath('/voices') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/voices') }}>
-              <ListItemIcon>
-                <Voicemail />
-              </ListItemIcon>
-              <ListItemText primary="Recordings" />
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
             <ListItem button className={this.checkPath('/compareVoices') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/compareVoices') }}>
               <ListItemIcon>
                 <GraphicEq />
@@ -256,7 +246,7 @@ class MiniDrawer extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button className={this.checkPath('/voiceGraph') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/voiceGraph') }}>
+            <ListItem button className={this.checkPath('/voices') ? classNames(classes.active) : ''} onClick={() => { pathActions.navigateToPage('/voices') }}>
               <ListItemIcon>
                 <Voicemail />
               </ListItemIcon>
@@ -272,7 +262,6 @@ class MiniDrawer extends React.Component {
               <Route path={"/dashboard"} component={Dashboard} />
               <Route path={"/voices"} component={VoicesPage} />
               <Route path={"/compareVoices"} component={CompareVoices} />
-              <Route path={"/voiceGraph"} component={VoiceGraph} />
             </Switch>
           </Router>
         </main>

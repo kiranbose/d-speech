@@ -1,67 +1,82 @@
 import * as React from 'react';
 import './VoiceGraph.css';
 import { connect } from 'react-redux';
+import { store } from '../../_helpers';
 import { voiceGraphActions } from '../../_actions';
-// import { CanvasJS } from 'canvasjs'
+// import CanvasJS from 'canvasjs'
 
 class VoiceGraph extends React.Component {
     constructor(props) {
-        super(props);
+        super(props);        
         this.state = {
             audioFiles: {},
-            voiceGrpah: {}
+            voiceGraph: {}
         };
     }
 
-    componentDidMount() {       
-        this.renderChart();
+    componentWillMount() {
+        this.props.dispatch(voiceGraphActions.getFileData(this.props.audioFiles.selectedSampleVoice, this.props.audioFiles.selectedUserVoice));
+        store.subscribe(() => {
+            var data = store.getState();
+            if (data.voiceGraph.hasOwnProperty('voiceGraph')) {                
+                if (data.voiceGraph != this.state.voiceGraph) {
+                    this.setState({ voiceGraph: data.voiceGraph });
+                    this.render();
+                }
+            }
+        });
     }
 
-    componentWillMount(){
-        this.props.dispatch(voiceGraphActions.getFileData(this.props.audioFiles.selectedSampleVoice, this.props.audioFiles.selectedUserVoice)); 
-    }
+    // componentWillUnMount() {
+
+    // }
 
     render() {
-        return (            
-            <div></div>
+        this.renderChart();
+        return (
+            <div>
+                <div id="chartContainer"></div>                
+            </div>
         );
     }
 
     renderChart() {
-        const chart = new CanvasJS.Chart("chartContainer", {
-            title: {
-                text: "Voice Comparison"
-            },
-            axisX: {
-                title: "Frequency"
-            },
-            axisY: {
-                title: "Power"
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                cursor: "pointer",
-                verticalAlign: "top",
-                horizontalAlign: "center",
-                dockInsidePlotArea: false
-            },
-            data: [{
-                type: "line",
-                name: "User 1",
-                showInLegend: true,
-                markerSize: 0,
-                dataPoints: this.props.data.fileData1
-            }, {
-                type: "line",
-                name: "User 2",
-                showInLegend: true,
-                markerSize: 0,
-                dataPoints: this.props.data.fileData2
-            }]
-        });
-        chart.render();
+        if (this.props.voiceGraph.voiceGraph) {
+            const chart = new CanvasJS.Chart("chartContainer", {
+                title: {
+                    text: "Voice Comparison"
+                },
+                axisX: {
+                    title: "Frequency"
+                },
+                axisY: {
+                    title: "Power"
+                },
+                toolTip: {
+                    shared: true
+                },
+                legend: {
+                    cursor: "pointer",
+                    verticalAlign: "top",
+                    horizontalAlign: "center",
+                    dockInsidePlotArea: false
+                },
+                data: [{
+                    type: "line",
+                    name: "User 1",
+                    showInLegend: true,
+                    markerSize: 0,
+                    dataPoints: this.props.voiceGraph.voiceGraph.fileData1
+                }, {
+                    type: "line",
+                    name: "User 2",
+                    showInLegend: true,
+                    markerSize: 0,
+                    dataPoints: this.props.voiceGraph.voiceGraph.fileData2
+                }]
+            });
+            chart.render();
+        }
     }
 }
 

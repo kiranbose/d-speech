@@ -3,9 +3,23 @@ import { connect } from 'react-redux';
 import './comparevoices.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
+import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography } from '@material-ui/core';
 import GraphicEq from "@material-ui/icons/GraphicEq";
+import { VoiceGraph } from '../VoiceGraph'
 
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+}
+
+function getModalStyle() {
+    const top = 20;
+    const left = 20;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+    };
+}
 
 class CompareVoices extends React.Component {
     constructor(props) {
@@ -15,13 +29,18 @@ class CompareVoices extends React.Component {
         this.state = {
             selectedSampleVoice: '',
             selectedUserVoice: '',
-            data: undefined
+            data: undefined,
+            open: false
         };
     }
 
-    componentWillUnmount(){
-        // store.unsubscribe();
-    }
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     componentDidMount() {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
@@ -84,9 +103,7 @@ class CompareVoices extends React.Component {
             <div>
                 <div className="height">
                     <div className="align-left align-text">
-                    <Typography variant="Headline">
-                        Sample voice records
-                    </Typography>
+                        <h2>Sample voice records</h2>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
@@ -101,9 +118,7 @@ class CompareVoices extends React.Component {
                         </Table>
                     </div>
                     <div className="align-right align-text">
-                        <Typography variant="Headline">
-                            User Voices records
-                        </Typography>
+                        <h2>User Voices records</h2>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
@@ -119,11 +134,24 @@ class CompareVoices extends React.Component {
                     </div>
                 </div>
                 <div className="align-text">
-                    <Button className="margin50" variant="extendedFab" aria-label="Delete">
+                    <Button onClick={this.handleOpen} className="margin50" variant="extendedFab" aria-label="Delete">
                         <GraphicEq />
                         Compare Voices
                     </Button>
                 </div>
+
+                <Modal
+                    aria-labelledby="simple-modal-title"
+                    aria-describedby="simple-modal-description"
+                    open={this.state.open}
+                    onClose={this.handleClose}>
+                    <div style={getModalStyle()} >
+                        <Typography variant="title" id="modal-title">
+                            <VoiceGraph />
+                        </Typography>
+                    </div>
+                </Modal>
+
             </div>
         )
     }
