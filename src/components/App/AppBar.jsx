@@ -250,7 +250,7 @@ class MiniDrawer extends React.Component {
               <ListItemIcon>
                 <Voicemail />
               </ListItemIcon>
-              <ListItemText primary="Recordings" />
+              <ListItemText primary="User Voices" />
             </ListItem>
           </List>
         </Drawer>
