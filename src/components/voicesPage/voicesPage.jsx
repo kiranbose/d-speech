@@ -116,6 +116,7 @@ class VoicesPage extends React.Component {
                         <Switch onChange={this.handleChange} className="switch" checked={this.state.userVoices} value="switch" color="default" />
                         Sample Records
                     </Paper>
+                    <br/>
                     <div>{tableData}</div>
                 </div>
 
