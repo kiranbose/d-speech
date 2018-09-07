@@ -42,7 +42,7 @@ class VoicesPage extends React.Component {
 
     handleOpen = (event) => {
         this.setState({ 
-            fileSource: event.target.value
+            fileSource: event.target.value ? event.target.value : event.target.parentElement.value;
          });
         this.setState({ 
             open: true
@@ -140,9 +140,11 @@ class VoicesPage extends React.Component {
                         onClose={this.handleClose}>
                         <div style={getModalStyle()} >
                             <Typography variant="title" id="modal-title">
+                            <div>
                                 <audio controls>
                                     <source src={this.state.fileSource} type="audio/mp3"/>
                                 </audio>
+                            </div>
                             </Typography>
                         </div>
                     </Modal>
