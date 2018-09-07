@@ -3,11 +3,8 @@ import { connect } from 'react-redux';
 import './VoicesPage.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
+import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal } from '@material-ui/core';
 import PlayArrow from "@material-ui/icons/PlayArrow";
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
 
 function getModalStyle() {
     const top = 20;
@@ -22,9 +19,12 @@ function getModalStyle() {
 class VoicesPage extends React.Component {
     constructor(props) {
         super(props);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
         this.state = {
             data: {},
-            userVoices: true
+            userVoices: true,
+            open: false
         };
     }
 
@@ -39,8 +39,16 @@ class VoicesPage extends React.Component {
         });
     }
 
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
     handleChange = (event) => {
-            this.setState({ userVoices: !this.state.userVoices });
+        this.setState({ userVoices: !this.state.userVoices });
     };
 
     render() {
@@ -50,9 +58,9 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button className="button" variant="extendedFab" >
-                        <PlayArrow />   
-                    </Button>
+                    <Button onClick={this.handleOpen} className="button" variant="extendedFab" >
+                        <PlayArrow />
+                    </Button> 
                 </TableCell>
             </TableRow>
         );
@@ -62,50 +70,50 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button className="button" variant="extendedFab" >
+                   <Button onClick={this.handleOpen} className="button" variant="extendedFab" >
                         <PlayArrow />
-                    </Button>
+                    </Button>                  
                 </TableCell>
             </TableRow>
         );
         let tableData;
         if (this.state.userVoices) {
             tableData = <Paper className="align-text">
-                            <Typography className="th-color" variant="title" id="modal-title">
-                                Sample voice records
+                <Typography className="th-color" variant="title" id="modal-title">
+                    Sample voice records
                         </Typography>
-                            <Table className="table table-striped">
-                                <TableHead className="theadcolor">
-                                    <TableRow>
-                                        <TableCell>User</TableCell>
-                                        <TableCell>Recorded File</TableCell>
-                                        <TableCell>Play</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {sampleVoicerows}
-                                </TableBody>
-                            </Table>
-                        </Paper>;
+                <Table className="table table-striped">
+                    <TableHead className="theadcolor">
+                        <TableRow>
+                            <TableCell>User</TableCell>
+                            <TableCell>Recorded File</TableCell>
+                            <TableCell>Play</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sampleVoicerows}
+                    </TableBody>
+                </Table>
+            </Paper>;
 
         } else {
-           tableData = <Paper className="align-text">
-                            <Typography className="th-color" variant="title" id="modal-title">
-                                User Voices records
+            tableData = <Paper className="align-text">
+                <Typography className="th-color" variant="title" id="modal-title">
+                    User Voices records
                         </Typography>
-                            <Table className="table table-striped">
-                                <TableHead className="theadcolor">
-                                    <TableRow>
-                                        <TableCell>User</TableCell>
-                                        <TableCell>Recorded File</TableCell>
-                                        <TableCell>Play</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {userVoicerows}
-                                </TableBody>
-                            </Table>
-                        </Paper>
+                <Table className="table table-striped">
+                    <TableHead className="theadcolor">
+                        <TableRow>
+                            <TableCell>User</TableCell>
+                            <TableCell>Recorded File</TableCell>
+                            <TableCell>Play</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {userVoicerows}
+                    </TableBody>
+                </Table>
+            </Paper>
         }
 
         return (
@@ -116,8 +124,22 @@ class VoicesPage extends React.Component {
                         <Switch onChange={this.handleChange} className="switch" checked={this.state.userVoices} value="switch" color="default" />
                         Sample Records
                     </Paper>
-                    <br/>
+                    <br />
                     <div>{tableData}</div>
+                    <Modal
+                        className="modal"
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.open}
+                        onClose={this.handleClose}>
+                        <div style={getModalStyle()} >
+                            <Typography variant="title" id="modal-title">
+                                <audio controls>
+                                    <source src="http://www.nihilus.net/soundtracks/Static%20Memories.mp3" type="audio/mp3"/>
+                                </audio>
+                            </Typography>
+                        </div>
+                    </Modal>
                 </div>
 
             </div>

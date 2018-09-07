@@ -7,10 +7,6 @@ import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal,
 import GraphicEq from "@material-ui/icons/GraphicEq";
 import { VoiceGraph } from '../VoiceGraph'
 
-function rand() {
-    return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
     const top = 20;
     const left = 20;
