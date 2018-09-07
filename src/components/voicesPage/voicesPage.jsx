@@ -42,7 +42,7 @@ class VoicesPage extends React.Component {
 
     handleOpen = (event) => {
         this.setState({ 
-            fileSource: event.target.value ? event.target.value : event.target.parentElement.value;
+            fileSource: event.target.value ? event.target.value : event.target.parentElement.value
          });
         this.setState({ 
             open: true
