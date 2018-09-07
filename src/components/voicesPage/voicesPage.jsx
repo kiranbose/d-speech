@@ -24,7 +24,8 @@ class VoicesPage extends React.Component {
         this.state = {
             data: {},
             userVoices: true,
-            open: false
+            open: false,
+            fileSource: ''
         };
     }
 
@@ -39,8 +40,13 @@ class VoicesPage extends React.Component {
         });
     }
 
-    handleOpen = () => {
-        this.setState({ open: true });
+    handleOpen = (event) => {
+        this.setState({ 
+            fileSource: event.target.value
+         });
+        this.setState({ 
+            open: true
+         });
     };
 
     handleClose = () => {
@@ -58,7 +64,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button onClick={this.handleOpen} className="button" variant="extendedFab" >
+                    <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button> 
                 </TableCell>
@@ -70,7 +76,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                   <Button onClick={this.handleOpen} className="button" variant="extendedFab" >
+                   <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button>                  
                 </TableCell>
@@ -135,7 +141,7 @@ class VoicesPage extends React.Component {
                         <div style={getModalStyle()} >
                             <Typography variant="title" id="modal-title">
                                 <audio controls>
-                                    <source src="http://www.nihilus.net/soundtracks/Static%20Memories.mp3" type="audio/mp3"/>
+                                    <source src={this.state.fileSource} type="audio/mp3"/>
                                 </audio>
                             </Typography>
                         </div>
