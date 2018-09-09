@@ -45,7 +45,7 @@ function getAll() {
         headers: authHeader(),
         credentials: 'same-origin'
     };
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(commonHandlers.handleAuthentication);
+    return fetch(`${config.apiUrl}/getAllUsers`, requestOptions).then(commonHandlers.handleAuthentication);
 
     // return fetch(`${config.apiUrl}/users`).then(u => console(u)).then(user => {
     //     console.log(user);

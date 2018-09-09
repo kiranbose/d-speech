@@ -41,9 +41,7 @@ const styles = theme => ({
 });
 
 class RecordingCard extends Component {
-  audio = new Audio(
-    "http://www.sousound.com/music/healing/healing_01.mp3"
-  );
+  audio = new Audio("http://www.sousound.com/music/healing/healing_01.mp3");
 
   constructor(props) {
     super(props);
@@ -55,12 +53,12 @@ class RecordingCard extends Component {
   };
 
   handlePreviousSeek = () => {
-    this.audio.currentTime -= 5;
-  }
+    this.audio.currentTime -= 2;
+  };
 
   handleForwardSeek = () => {
-    this.audio.currentTime += 5;
-  }
+    this.audio.currentTime += 2;
+  };
 
   handleExpandClick = () => {
     this.setState(state => ({ expanded: !state.expanded }));
@@ -90,9 +88,9 @@ class RecordingCard extends Component {
             </Typography>
           </CardContent>
           <div className={classes.controls}>
-            <IconButton aria-label="Previous">
+            <IconButton onClick={this.handlePreviousSeek} aria-label="Previous">
               {theme.direction === "rtl" ? (
-                <SkipNextIcon onClick={this.handlePreviousSeek} />
+                <SkipNextIcon />
               ) : (
                 <SkipPreviousIcon />
               )}
@@ -110,9 +108,9 @@ class RecordingCard extends Component {
                 />
               )}
             </IconButton>
-            <IconButton aria-label="Next">
+            <IconButton onClick={this.handlePreviousSeek} aria-label="Next">
               {theme.direction === "rtl" ? (
-                <SkipPreviousIcon onClick={this.handleForwardSeek} />
+                <SkipPreviousIcon />
               ) : (
                 <SkipNextIcon />
               )}

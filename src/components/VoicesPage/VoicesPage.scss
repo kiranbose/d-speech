@@ -1,0 +1,31 @@
+canvas {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+.record-buttons {
+    button{
+        margin: 10px;
+    }    
+}
+
+.align-text {
+    text-align: center;
+}
+
+.th-color{
+    color:rgba(0, 0, 0, 0.54);
+}
+
+.switch{
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.button{
+    height:30px !important
+}
+
+.modal{
+    top: 50% !important;
+    left: 35% !important;
+}

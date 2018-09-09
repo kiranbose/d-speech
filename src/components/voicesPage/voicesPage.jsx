@@ -1,48 +1,168 @@
-import React from "react";
-import { connect } from "react-redux";
-import { ReactMic } from "react-mic";
-import { recordActions, recordingConstants } from "../../_actions";
-import "./voices.scss";
-import RecordingCard from "../common/recordingCard/RecordingCard";
+import * as React from 'react';
+import { connect } from 'react-redux';
+import './VoicesPage.scss';
+import { store } from '../../_helpers';
+import { audioFileActions } from '../../_actions';
+import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal } from '@material-ui/core';
+import PlayArrow from "@material-ui/icons/PlayArrow";
+import RecordingCard from '../common/recordingCard/RecordingCard';
 
-const defaultProps = {
-  loop: false,
-  downloadable: true,
-  className: "",
-  style: {},
-  filename: "output.wav",
-  playLabel: "🔊 Play",
-  playingLabel: "❚❚ Playing",
-  recordLabel: "● Record",
-  stopLabel: "● Stop",
-  removeLabel: "✖ Remove",
-  downloadLabel: "\ud83d\udcbe Save", // unicode floppy disk,
-  uploadForm: ""
-};
+function getModalStyle() {
+    const top = 20;
+    const left = 20;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+    };
+}
 
 class VoicesPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      test: ""
-    };
-  }
+    constructor(props) {
+        super(props);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.state = {
+            data: {},
+            userVoices: true,
+            open: false,
+            fileSource: ''
+        };
+    }
 
-  render() {
-    return (
-      <div className="jumbotron">
-        <RecordingCard />
-      </div>
-    );
-  }
+    componentWillMount() {
+        this.props.dispatch(audioFileActions.getUserAudioFiles());
+        store.subscribe(() => {
+            var data = store.getState();
+            if (data.audioFiles.hasOwnProperty('audioFiles')) {
+                this.setState({ data: data.audioFiles.audioFiles.result });
+                this.render();
+            }
+        });
+    }
+
+    handleOpen = (event) => {
+        this.setState({ 
+            fileSource: event.target.value ? event.target.value : event.target.parentElement.value
+         });
+        this.setState({ 
+            open: true
+         });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+
+    handleChange = (event) => {
+        this.setState({ userVoices: !this.state.userVoices });
+    };
+
+    render() {
+        const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
+        const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>{audio.user.firstName}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+                <TableCell>
+                    <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
+                        <PlayArrow />
+                    </Button> 
+                </TableCell>
+            </TableRow>
+        );
+        const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
+        const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>{audio.user.firstName}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+                <TableCell>
+                   <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
+                        <PlayArrow />
+                    </Button>                  
+                </TableCell>
+            </TableRow>
+        );
+        let tableData;
+        if (this.state.userVoices) {
+            tableData = <Paper className="align-text">
+                <Typography className="th-color" variant="title" id="modal-title">
+                    Sample voice records
+                        </Typography>
+                <Table className="table table-striped">
+                    <TableHead className="theadcolor">
+                        <TableRow>
+                            <TableCell>User</TableCell>
+                            <TableCell>Recorded File</TableCell>
+                            <TableCell>Play</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sampleVoicerows}
+                    </TableBody>
+                </Table>
+            </Paper>;
+
+        } else {
+            tableData = <Paper className="align-text">
+                <Typography className="th-color" variant="title" id="modal-title">
+                    User Voices records
+                        </Typography>
+                <Table className="table table-striped">
+                    <TableHead className="theadcolor">
+                        <TableRow>
+                            <TableCell>User</TableCell>
+                            <TableCell>Recorded File</TableCell>
+                            <TableCell>Play</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {userVoicerows}
+                    </TableBody>
+                </Table>
+            </Paper>
+        }
+
+        return (
+            <div>
+                <div className="height">
+                    <Paper className="align-text">
+                        User Records
+                        <Switch onChange={this.handleChange} className="switch" checked={this.state.userVoices} value="switch" color="default" />
+                        Sample Records
+                    </Paper>
+                    <br />
+                    <div>{tableData}</div>
+                    <Modal
+                        className="modal"
+                        aria-labelledby="simple-modal-title"
+                        aria-describedby="simple-modal-description"
+                        open={this.state.open}
+                        onClose={this.handleClose}>
+                        <div style={getModalStyle()} >
+                            <Typography variant="title" id="modal-title">
+                            <div>
+                                <audio controls>
+                                    <source src={this.state.fileSource} type="audio/mp3"/>
+                                </audio>
+                            </div>
+                            </Typography>
+                        </div>
+                    </Modal>
+                </div>
+              <RecordingCard />
+            </div>
+        )
+    }
 }
 
 function mapStateToProps(state) {
-  const { authentication } = state;
-  return {
-    authentication
-  };
+    const { audioFiles } = state;
+    return {
+        audioFiles
+    };
 }
 
-const connectedVoicesPage = connect(mapStateToProps)(VoicesPage);
-export { connectedVoicesPage as VoicesPage };
+
+const voicesPage = connect(mapStateToProps)(VoicesPage);
+export { voicesPage as VoicesPage };
