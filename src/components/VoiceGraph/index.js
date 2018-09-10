@@ -1,1 +1,1 @@
-export * from './voiceGraph';
+export * from './VoiceGraph';
