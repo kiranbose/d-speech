@@ -3,7 +3,7 @@ export * from './record.service';
 export * from './audioFiles.service';
 export * from './voiceGraph.service';
 import config from 'config';  //global variables - set shared variables in webpack.config
-import { loadingBarActions, userActions } from '../_actions'
+import { loadingBarActions, userActions, alertActions } from '../_actions'
 
 export const commonHandlers = {
     handleAuthentication,
@@ -17,6 +17,7 @@ function handleAuthentication(response) {
             if (response.status === 420 && data.message === 'Session Timed Out') {
                 // auto logout if 420 response returned from api
                 userActions.logout();
+                alertActions.error(data.message);
                 location.reload(true);
             }
 
@@ -30,6 +31,7 @@ function handleAuthentication(response) {
 function handleError(response) {
     if (response === 'Session Timed Out') {
         userActions.logout();
+        alertActions.error(response);
         location.reload(true);
     }
 }
