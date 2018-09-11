@@ -5,7 +5,6 @@ import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
 import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal } from '@material-ui/core';
 import PlayArrow from "@material-ui/icons/PlayArrow";
-import RecordingCard from '../common/recordingCard/RecordingCard';
 
 function getModalStyle() {
     const top = 20;
@@ -150,7 +149,6 @@ class VoicesPage extends React.Component {
                         </div>
                     </Modal>
                 </div>
-              <RecordingCard />
             </div>
         )
     }
