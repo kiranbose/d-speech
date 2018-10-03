@@ -6,6 +6,8 @@ import { audioFileActions } from '../../_actions';
 import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography } from '@material-ui/core';
 import GraphicEq from "@material-ui/icons/GraphicEq";
 import { VoiceGraph } from '../VoiceGraph'
+import io from 'socket.io-client'
+import config from 'config';  //global variables - set shared variables in webpack.config
 
 function getModalStyle() {
     const top = 20;
@@ -16,6 +18,8 @@ function getModalStyle() {
         left: `${left}%`,
     };
 }
+
+let socket;
 
 class CompareVoices extends React.Component {
     constructor(props) {
@@ -47,6 +51,24 @@ class CompareVoices extends React.Component {
                 this.render();
             }
         });
+    }
+
+    componentWillUnmount() {
+        // socket.disconnect();
+    }
+
+    closeSocket = () => {
+        socket.disconnect();
+    }
+
+    openSocket = () => {
+        // socket = io.connect(config.apiUrl);
+        let url = config.apiUrl;
+        socket = io.connect(url);
+        socket.emit('clientConnected', {data: 'im connected'});
+        socket.on('chunkForFile1',(res)=>{
+            console.dir(res)
+        }) 
     }
 
     handleSampleVoiceChange(event) {
@@ -133,6 +155,14 @@ class CompareVoices extends React.Component {
                     <Button onClick={this.handleOpen} className="margin50" variant="extendedFab" aria-label="Delete">
                         <GraphicEq />
                         Compare Voices
+                    </Button>
+                    <Button onClick={this.openSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                        <GraphicEq />
+                        Open Socket
+                    </Button>
+                    <Button onClick={this.closeSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                        <GraphicEq />
+                        Close Socket
                     </Button>
                 </div>
 
