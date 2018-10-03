@@ -86,7 +86,9 @@ module.exports = function webpackConfig() {
         filename: 'index.html',
         inject: 'body'
       }),
-      new CopyWebpackPlugin([{ from: 'src/assets/images', to: 'assets/images' }])
+      new CopyWebpackPlugin([{ from: 'src/assets/images', to: 'assets/images' },
+      { from: 'src/assets/uploads', to: 'assets/uploads' }])
+      
     ],
     resolve: {
       extensions: ['.js', '.jsx'],

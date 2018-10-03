@@ -5,6 +5,7 @@ import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
 import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal } from '@material-ui/core';
 import PlayArrow from "@material-ui/icons/PlayArrow";
+import ReactAudioPlayer from 'react-audio-player';
 
 function getModalStyle() {
     const top = 20;
@@ -60,11 +61,11 @@ class VoicesPage extends React.Component {
     render() {
         const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
         const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
-            <TableRow key={audio._id.$oid}>
+            <TableRow key={audio.fileName}>
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
+                    <Button onClick={this.handleOpen} value={audio.fileName} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button> 
                 </TableCell>
@@ -72,11 +73,11 @@ class VoicesPage extends React.Component {
         );
         const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
         const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
-            <TableRow key={audio._id.$oid}>
+            <TableRow key={audio.fileName}>
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                   <Button onClick={this.handleOpen} value={audio.stereoFilePath} className="button" variant="extendedFab" >
+                   <Button onClick={this.handleOpen} value={audio.fileName} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button>                  
                 </TableCell>
@@ -141,9 +142,11 @@ class VoicesPage extends React.Component {
                         <div style={getModalStyle()} >
                             <Typography variant="title" id="modal-title">
                             <div>
-                                <audio controls>
-                                    <source src={this.state.fileSource} type="audio/mp3"/>
-                                </audio>
+                                <ReactAudioPlayer
+                                    src={"../../assets/uploads/" + this.state.fileSource}
+                                    autoPlay
+                                    controls
+                                    />
                             </div>
                             </Typography>
                         </div>
