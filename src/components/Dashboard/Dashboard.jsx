@@ -20,7 +20,7 @@ const styles = theme => ({
         background: 'whitesmoke',
         minWidth: '150px',
         display: 'inline-block',
-        marginRight: '10%'
+        marginRight: '10px'
     },
     numberDisplay: {
         fontSize: '4em'
@@ -107,12 +107,12 @@ class Dashboard extends React.Component {
             <div>
                 <Grid
                     container
-                    spacing={5}
+                    spacing={10}
                     direction="row"
                     justify="space-evenly"
                 >
                     <Grid
-                        item md={5}
+                        item md={6}
                     >
                         {cardInfo.map((card) => {
                             return (
