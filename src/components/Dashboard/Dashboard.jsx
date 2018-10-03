@@ -9,7 +9,7 @@ import {
 import { withStyles } from '@material-ui/core/styles';
 import Icon from '@material-ui/core/Icon';
 
-import { userActions, pathActions } from '../../_actions';
+import { userActions, pathActions, metaDataActions } from '../../_actions';
 import './dashboard.scss';
 
 const styles = theme => ({
@@ -49,21 +49,24 @@ class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open: false
+            open: false,
+            googleText: ''
         };
     }
 
     componentDidMount() {
         this.props.dispatch(userActions.getAll());
+        this.props.dispatch(metaDataActions.getMetaData());
     }
 
     handleDeleteUser(id) {
         return (e) => this.props.dispatch(userActions.delete(id));
     }
 
-    handleOpen = (event) => {
+    handleOpen = (text) => {
         this.setState({
-            open: true
+            open: true,
+            googleText: text
         });
     };
 
@@ -74,35 +77,42 @@ class Dashboard extends React.Component {
     };
 
     render() {
-        const { user, users, classes } = this.props;
-        const cardInfo = [
-            {
-                title: 'Number of user audio files',
-                count: '23'
-            },
-            {
-                title: 'Number of sample audio files',
-                count: '34'
-            },
-            /* {
-                title: 'Average wpm',
-                count: '100'
-            },
-            {
-                title: 'Ranking',
-                count: '2'
-            }, */
-        ]
+        const { user, users, classes, metaData } = this.props;
+        let cardInfo = [];
+        let userRecordings = [];
+        let sampleRecordings = [];
+        if (metaData && metaData.hasOwnProperty('userRecordings')) {
+            userRecordings = metaData.userRecordings;
+            sampleRecordings = metaData.sampleRecordings;
+            cardInfo = [
+                {
+                    title: 'user files Count',
+                    count: userRecordings.length
+                },
+                {
+                    title: 'sample files count',
+                    count: sampleRecordings.length
+                },
+                 {
+                    title: 'Average wpm',
+                    count: userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0)/userRecordings.length
+                }
+                /*{
+                    title: 'Ranking',
+                    count: '2'
+                }, */
+            ]
+        }
         return (
             <div>
                 <Grid
                     container
-                    spacing={20}
+                    spacing={5}
                     direction="row"
                     justify="space-evenly"
                 >
                     <Grid
-                        item xs={7}
+                        item md={5}
                     >
                         {cardInfo.map((card) => {
                             return (
@@ -122,60 +132,37 @@ class Dashboard extends React.Component {
                                 <TableRow>
                                     <TableCell>File Name</TableCell>
                                     <TableCell>File Duration</TableCell>
-                                    <TableCell>Speed</TableCell>
                                     <TableCell>Word Count</TableCell>
                                     <TableCell>Loudness</TableCell>
                                     <TableCell>Audio Text</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                <TableRow key="1">
-                                    <TableCell>Filename1.wav</TableCell>
-                                    <TableCell>10:00</TableCell>
-                                    <TableCell>20</TableCell>
-                                    <TableCell>100</TableCell>
-                                    <TableCell>40</TableCell>
-                                    <TableCell>
-                                        {/* <Tooltip title="This is test"> */}
-                                        <Button color="primary" onClick={this.handleOpen}>
-                                            <Icon>help</Icon>
-                                        </Button>
-                                        {/* </Tooltip> */}
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow key="2">
-                                    <TableCell>Filename2.wav</TableCell>
-                                    <TableCell>10:00</TableCell>
-                                    <TableCell>20</TableCell>
-                                    <TableCell>100</TableCell>
-                                    <TableCell>40</TableCell>
-                                    <TableCell>
-                                        <Tooltip title="This is test">
-                                        <Button color="primary">
-                                            <Icon>help</Icon>
-                                        </Button>
-                                        </Tooltip>
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow key="3">
-                                    <TableCell>Filename3.wav</TableCell>
-                                    <TableCell>10:00</TableCell>
-                                    <TableCell>20</TableCell>
-                                    <TableCell>100</TableCell>
-                                    <TableCell>40</TableCell>
-                                    <TableCell>
-                                        {/* <Tooltip title="This is test"> */}
-                                        <Button color="primary" onClick={this.handleOpen}>
-                                            <Icon>help</Icon>
-                                        </Button>
-                                        {/* </Tooltip> */}
-                                    </TableCell>
-                                </TableRow>
+                                {
+                                    metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.map((data, index) => {
+                                        return (
+                                            <TableRow key={'' + index}>
+                                                <TableCell>{ data.fileName }</TableCell>
+                                                <TableCell>{ data.duration_milliseconds/60000 } m</TableCell>
+                                                <TableCell>{ data.speed } wpm</TableCell>
+                                                <TableCell>placeholder</TableCell>
+                                                <TableCell>
+                                                    {/* <Tooltip title="This is test"> */}
+                                                    <Button color="primary" onClick={() => { this.handleOpen(data.text) }}>
+                                                        <Icon>help</Icon>
+                                                    </Button>
+                                                    {/* </Tooltip> */}  
+                                                </TableCell>
+                                            </TableRow>
+                                        )
+                                    })
+
+                                }
                             </TableBody>
                         </Table>
                     </Grid>
                     <Grid
-                        item xs={4}
+                        item xs={5}
                     >
                         {/* <Paper className="align-text">
                             <Typography className="th-color" variant="title" id="modal-title">
@@ -189,7 +176,7 @@ class Dashboard extends React.Component {
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
-                                    <TableCell>20</TableCell>
+                                    <TableCell>{userRecordings && userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0)/userRecordings.length}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
                                     <TableCell><strong>Loudness</strong></TableCell>
@@ -230,7 +217,7 @@ class Dashboard extends React.Component {
                     onClose={this.handleClose}>
                     <div style={getModalStyle()} className={classes.paper}>
                         <Typography variant="title" id="modal-title">
-                            This is Sample Test.
+                            {this.state.googleText}
                         </Typography>
                     </div>
                 </Modal>
@@ -241,11 +228,12 @@ class Dashboard extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { users, authentication } = state;
+    const { users, authentication, metaData } = state;
     const { user } = authentication;
     return {
         user,
-        users
+        users,
+        metaData
     };
 }
 const StyleAttachedComponent = withStyles(styles, { withTheme: true })(Dashboard);

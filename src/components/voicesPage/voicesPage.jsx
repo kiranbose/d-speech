@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import './VoicesPage.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal } from '@material-ui/core';
+import { Switch, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography, Modal , Grid} from '@material-ui/core';
 import PlayArrow from "@material-ui/icons/PlayArrow";
 import ReactAudioPlayer from 'react-audio-player';
 
@@ -14,6 +14,7 @@ function getModalStyle() {
     return {
         top: `${top}%`,
         left: `${left}%`,
+        width: '10px'
     };
 }
 
@@ -31,7 +32,7 @@ class VoicesPage extends React.Component {
     }
 
     componentWillMount() {
-        this.props.dispatch(audioFileActions.getUserAudioFiles());
+    this.props.dispatch(audioFileActions.getUserAudioFiles());
         store.subscribe(() => {
             var data = store.getState();
             if (data.audioFiles.hasOwnProperty('audioFiles')) {
@@ -41,9 +42,9 @@ class VoicesPage extends React.Component {
         });
     }
 
-    handleOpen = (event) => {
+    handleOpen = (fileName) => {
         this.setState({ 
-            fileSource: event.target.value ? event.target.value : event.target.parentElement.value
+            fileSource: fileName
          });
         this.setState({ 
             open: true
@@ -65,7 +66,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button onClick={this.handleOpen} value={audio.fileName} className="button" variant="extendedFab" >
+                    <Button onClick={() => { this.handleOpen(audio.fileName) }} value={audio.fileName} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button> 
                 </TableCell>
@@ -77,7 +78,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                   <Button onClick={this.handleOpen} value={audio.fileName} className="button" variant="extendedFab" >
+                   <Button onClick={() => { this.handleOpen(audio.fileName) }} value={audio.fileName} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button>                  
                 </TableCell>
@@ -139,17 +140,13 @@ class VoicesPage extends React.Component {
                         aria-describedby="simple-modal-description"
                         open={this.state.open}
                         onClose={this.handleClose}>
-                        <div style={getModalStyle()} >
-                            <Typography variant="title" id="modal-title">
-                            <div>
-                                <ReactAudioPlayer
-                                    src={"../../assets/uploads/" + this.state.fileSource}
-                                    autoPlay
-                                    controls
-                                    />
-                            </div>
-                            </Typography>
-                        </div>
+                        <Grid style={getModalStyle()} >
+                            <ReactAudioPlayer
+                                src={"../../assets/uploads/" + this.state.fileSource}
+                                autoPlay
+                                controls
+                                />
+                        </Grid>
                     </Modal>
                 </div>
             </div>
