@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 import './comparevoices.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography } from '@material-ui/core';
+import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography, DialogTitle, DialogContent, DialogActions, Dialog  } from '@material-ui/core';
 import GraphicEq from "@material-ui/icons/GraphicEq";
 import { VoiceGraph } from '../VoiceGraph'
 import io from 'socket.io-client'
 import config from 'config';  //global variables - set shared variables in webpack.config
+// import Dialog from '@material-ui/core/Dialog';
 
 function getModalStyle() {
     const top = 20;
@@ -87,6 +88,7 @@ class CompareVoices extends React.Component {
 
     render() {
         const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
+        const title = "Power Analysis";
         const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
             <TableRow key={audio._id.$oid}>
                 <TableCell>
@@ -121,7 +123,9 @@ class CompareVoices extends React.Component {
             <div>
                 <div className="height">
                     <div className="align-left align-text">
-                        <h2>Sample voice records</h2>
+                        <Typography variant="subheading" color="textPrimary">
+                            Sample voice records
+                        </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
@@ -136,7 +140,9 @@ class CompareVoices extends React.Component {
                         </Table>
                     </div>
                     <div className="align-right align-text">
-                        <h2>User Voices records</h2>
+                        <Typography variant="subheading" color="textPrimary">
+                            User voice records
+                        </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
@@ -152,31 +158,36 @@ class CompareVoices extends React.Component {
                     </div>
                 </div>
                 <div className="align-text">
-                    <Button onClick={this.handleOpen} className="margin50" variant="extendedFab" aria-label="Delete">
+                    <Button onClick={this.handleOpen} disabled={!(this.state.selectedSampleVoice && this.state.selectedUserVoice)} className="compare-button" variant="extendedFab" aria-label="Delete">
                         <GraphicEq />
                         Compare Voices
                     </Button>
-                    <Button onClick={this.openSocket} className="margin50" variant="extendedFab" aria-label="Open">
-                        <GraphicEq />
-                        Open Socket
-                    </Button>
-                    <Button onClick={this.closeSocket} className="margin50" variant="extendedFab" aria-label="Open">
-                        <GraphicEq />
-                        Close Socket
-                    </Button>
                 </div>
 
-                <Modal
-                    aria-labelledby="simple-modal-title"
-                    aria-describedby="simple-modal-description"
-                    open={this.state.open}
-                    onClose={this.handleClose}>
-                    <div style={getModalStyle()} >
-                        <Typography variant="title" id="modal-title">
-                            <VoiceGraph />
-                        </Typography>
-                    </div>
-                </Modal>
+                {/* socket programming code commented out
+                uncomment if socket needed */}
+                
+                {/* <Button onClick={this.openSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                    <GraphicEq />
+                    Open Socket
+                </Button>
+                <Button onClick={this.closeSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                    <GraphicEq />
+                    Close Socket
+                </Button> */}
+
+
+                 <Dialog maxWidth='lg' onClose={this.handleClose} aria-labelledby="graph-dialog-title" open={this.state.open}>
+                    <DialogTitle id="graph-dialog-title">{title}</DialogTitle>
+                    <DialogContent className="d-content">
+                        <VoiceGraph />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="secondary">
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
             </div>
         )

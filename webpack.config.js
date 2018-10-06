@@ -86,8 +86,10 @@ module.exports = function webpackConfig() {
         filename: 'index.html',
         inject: 'body'
       }),
-      new CopyWebpackPlugin([{ from: 'src/assets/images', to: 'assets/images' },
-      { from: 'src/assets/uploads', to: 'assets/uploads' }])
+      new CopyWebpackPlugin([
+        { from: 'src/assets/images', to: 'assets/images' },
+        { from: 'src/assets/uploads', to: 'assets/uploads' }
+      ])
       
     ],
     resolve: {
@@ -100,7 +102,7 @@ module.exports = function webpackConfig() {
       contentBase: path.join(__dirname, 'dist'),
       compress: true,
       historyApiFallback: true,
-      port: devPort
+      port: devPort,
     },
     externals: {
       // global app config object

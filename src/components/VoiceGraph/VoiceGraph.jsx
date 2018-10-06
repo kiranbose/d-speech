@@ -1,13 +1,14 @@
 import * as React from 'react';
-import './VoiceGraph.css';
+import './VoiceGraph.scss';
 import { connect } from 'react-redux';
 import { store } from '../../_helpers';
 import { voiceGraphActions } from '../../_actions';
+import { Grid, Card, CardContent, Typography } from '@material-ui/core';
 // import CanvasJS from 'canvasjs'
 
 class VoiceGraph extends React.Component {
     constructor(props) {
-        super(props);        
+        super(props);
         this.state = {
             audioFiles: {},
             voiceGraph: {}
@@ -18,11 +19,8 @@ class VoiceGraph extends React.Component {
         this.props.dispatch(voiceGraphActions.getFileData(this.props.audioFiles.selectedSampleVoice, this.props.audioFiles.selectedUserVoice));
         store.subscribe(() => {
             var data = store.getState();
-            if (data.voiceGraph.hasOwnProperty('voiceGraph')) {                
-                if (data.voiceGraph != this.state.voiceGraph) {
-                    this.setState({ voiceGraph: data.voiceGraph });
-                    this.render();
-                }
+            if (data.voiceGraph.hasOwnProperty('graph')) {
+                this.render();
             }
         });
     }
@@ -32,52 +30,50 @@ class VoiceGraph extends React.Component {
     // }
 
     render() {
-        this.renderChart();
+        const { voiceGraph } = this.props;
         return (
             <div>
-                <div id="chartContainer"></div>                
+                {voiceGraph && voiceGraph.hasOwnProperty('fileName') &&
+                    <div>
+                        <img src={'../../assets/uploads/' + voiceGraph.fileName} alt="graph" width="100%" />
+                        <Grid
+                            container
+                            spacing={14}
+                            direction="row"
+                            justify="space-around"
+                            className="card-container"
+                        >
+                            <Grid item md={6}>
+                                <Card className="user-card">
+                                    <CardContent>
+                                        <Typography variant="title" color="textPrimary">
+                                            User Audio Text
+                                </Typography>
+                                        <Typography variant="subheading">
+                                            {voiceGraph.userText}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item md={6}>
+                                <Card className="sample-card">
+                                    <CardContent>
+                                        <Typography variant="title" color="textPrimary">
+                                            Sample Audio Text
+                                </Typography>
+                                        <Typography variant="subheading">
+                                            {voiceGraph.sampleText}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        </Grid>
+                    </div>
+                }
             </div>
         );
     }
 
-    renderChart() {
-        if (this.props.voiceGraph.voiceGraph) {
-            const chart = new CanvasJS.Chart("chartContainer", {
-                title: {
-                    text: "Voice Comparison"
-                },
-                axisX: {
-                    title: "Frequency"
-                },
-                axisY: {
-                    title: "Power"
-                },
-                toolTip: {
-                    shared: true
-                },
-                legend: {
-                    cursor: "pointer",
-                    verticalAlign: "top",
-                    horizontalAlign: "center",
-                    dockInsidePlotArea: false
-                },
-                data: [{
-                    type: "line",
-                    name: "User 1",
-                    showInLegend: true,
-                    markerSize: 0,
-                    dataPoints: this.props.voiceGraph.voiceGraph.fileData1
-                }, {
-                    type: "line",
-                    name: "User 2",
-                    showInLegend: true,
-                    markerSize: 0,
-                    dataPoints: this.props.voiceGraph.voiceGraph.fileData2
-                }]
-            });
-            chart.render();
-        }
-    }
 }
 
 function mapStateToProps(state) {

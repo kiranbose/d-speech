@@ -127,13 +127,15 @@ class VoicesPage extends React.Component {
         return (
             <div>
                 <div className="height">
+                <Grid>
                     <Paper className="align-text">
                         User Records
                         <Switch onChange={this.handleChange} className="switch" checked={this.state.userVoices} value="switch" color="default" />
                         Sample Records
                     </Paper>
                     <br />
-                    <div>{tableData}</div>
+                    <Grid>{tableData}</Grid>
+                </Grid>
                     <Modal
                         className="modal"
                         aria-labelledby="simple-modal-title"
