@@ -22,6 +22,14 @@ const styles = theme => ({
         display: 'inline-block',
         marginRight: '10px'
     },
+    rightCard: {
+        background: 'whitesmoke',
+        minWidth: '150px',
+        display: 'inline-block',
+        marginRight: '10px',
+        width:  '100%',
+        textAlign: 'center'
+    },
     numberDisplay: {
         fontSize: '4em'
     },
@@ -87,14 +95,14 @@ class Dashboard extends React.Component {
         let userAverageWpm = 0;
         let sampleAverageWpm = 0;
         if (Object.keys(metaData).length > 0) {
-            
+
             userRecordings = metaData.userRecordings;
             sampleRecordings = metaData.sampleRecordings;
             if (userRecordings.length > 0) {
-                userAverageWpm = Math.ceil(userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0)/userRecordings.length)
+                userAverageWpm = Math.ceil(userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0) / userRecordings.length)
             }
             if (sampleRecordings.length > 0) {
-                sampleAverageWpm = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0)/sampleRecordings.length)
+                sampleAverageWpm = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0) / sampleRecordings.length)
             }
 
             cardInfo = [
@@ -106,7 +114,7 @@ class Dashboard extends React.Component {
                     title: 'sample files count',
                     count: sampleRecordings.length
                 },
-                 {
+                {
                     title: 'Average wpm',
                     count: userAverageWpm
                 }
@@ -116,7 +124,7 @@ class Dashboard extends React.Component {
                 }, */
             ]
             if (admin) {
-                cardInfo.splice(0,1);
+                cardInfo.splice(0, 1);
             }
         }
         return (
@@ -158,16 +166,16 @@ class Dashboard extends React.Component {
                                     metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.map((data, index) => {
                                         return (
                                             <TableRow key={'' + index}>
-                                                <TableCell>{ data.fileName }</TableCell>
-                                                <TableCell>{ data.duration_milliseconds/60000 } m</TableCell>
-                                                <TableCell>{ data.speed } wpm</TableCell>
+                                                <TableCell>{data.fileName}</TableCell>
+                                                <TableCell>{data.duration_milliseconds / 1000} sec</TableCell>
+                                                <TableCell>{data.speed} wpm</TableCell>
                                                 <TableCell>29</TableCell>
                                                 <TableCell>
                                                     {/* <Tooltip title="This is test"> */}
                                                     <Button color="primary" onClick={() => { this.handleOpen(data.text, data.graphPath) }}>
                                                         <Icon>help</Icon>
                                                     </Button>
-                                                    {/* </Tooltip> */}  
+                                                    {/* </Tooltip> */}
                                                 </TableCell>
                                             </TableRow>
                                         )
@@ -176,15 +184,35 @@ class Dashboard extends React.Component {
                                 }
                             </TableBody>
                         </Table>
+                        <Table className="table table-striped" style={{ marginTop: 30 }}>
+                            <Typography className="th-color" variant="subheading" id="modal-title">
+                                Latest Comparison
+                            </Typography>
+                            <TableBody>
+                                {
+                                    metaData && metaData.hasOwnProperty('userRecordings') && (
+                                        <TableRow>
+                                            <TableCell>
+                                                <img src={'../../assets/uploads/' + metaData.latestComparison[0].graphPath} width="100%" />
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                            </TableBody>
+                        </Table>
                     </Grid>
                     <Grid
                         item xs={5}
                     >
-                        {/* <Paper className="align-text">
-                            <Typography className="th-color" variant="title" id="modal-title">
-                                Metrics
-                            </Typography>
-                        </Paper> */}
+                        <Card className={classes.rightCard}>
+                            <CardContent>
+                                <Typography variant="subheading" color="textPrimary">
+                                    User Score Level
+                                </Typography>
+                                <Typography variant="title">
+                                    Intermediate
+                                </Typography>
+                            </CardContent>
+                        </Card>
                         {!admin && <Table className="table table-striped" style={{ marginTop: 30 }}>
                             <Typography className="th-color" variant="subheading" id="modal-title">
                                 User Metrics (Overall Avg)
@@ -192,7 +220,7 @@ class Dashboard extends React.Component {
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
-                                    <TableCell>{ userAverageWpm }</TableCell>
+                                    <TableCell>{userAverageWpm}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
                                     <TableCell><strong>Loudness</strong></TableCell>
@@ -211,7 +239,7 @@ class Dashboard extends React.Component {
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
-                                    <TableCell>{ sampleAverageWpm }</TableCell>
+                                    <TableCell>{sampleAverageWpm}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
                                     <TableCell><strong>Loudness</strong></TableCell>
@@ -224,24 +252,24 @@ class Dashboard extends React.Component {
                             </TableBody>
                         </Table>
                         {metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.length > 0 &&
-                        <Table className="table table-striped" style={{ marginTop: 30 }}>
-                            <Typography className="th-color" variant="subheading" id="modal-title">
-                                Recent User Metrics
+                            <Table className="table table-striped" style={{ marginTop: 30 }}>
+                                <Typography className="th-color" variant="subheading" id="modal-title">
+                                    Recent User Metrics
                             </Typography>
-                            <TableBody>
-                                {
-                                    metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.map((data, index) => {
-                                        if (index >= metaData.userRecordings.length - 5) {
-                                            return (<TableRow key={index}>
-                                                        <TableCell>
-                                                            <img src={'../../assets/uploads/' + data.graphPath} width="100%"/>
-                                                        </TableCell>
-                                                    </TableRow>)
-                                        }
-                                    })
-                                }
-                            </TableBody>
-                        </Table>
+                                <TableBody>
+                                    {
+                                        metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.map((data, index) => {
+                                            if (index >= metaData.userRecordings.length - 5) {
+                                                return (<TableRow key={index}>
+                                                    <TableCell>
+                                                        <img src={'../../assets/uploads/' + data.graphPath} width="100%" />
+                                                    </TableCell>
+                                                </TableRow>)
+                                            }
+                                        })
+                                    }
+                                </TableBody>
+                            </Table>
                         }
                     </Grid>
                 </Grid>
@@ -252,7 +280,7 @@ class Dashboard extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}>
                     <div style={getModalStyle()} className={classes.paper}>
-                        <img src={'../../assets/uploads/' + this.state.graphPath} alt="graph" width="100%"/>
+                        <img src={'../../assets/uploads/' + this.state.graphPath} alt="graph" width="100%" />
                         <Typography variant="subheading" id="modal-title">
                             {this.state.googleText}
                         </Typography>
