@@ -190,10 +190,10 @@ class Dashboard extends React.Component {
                             </Typography>
                             <TableBody>
                                 {
-                                    metaData && metaData.hasOwnProperty('userRecordings') && (
+                                    metaData && metaData.hasOwnProperty('latestComparison') && metaData.latestComparison.length > 0 && (
                                         <TableRow>
                                             <TableCell>
-                                                <img src={'../../assets/uploads/' + metaData.latestComparison[0].graphPath} width="100%" />
+                                                <img src={'../../assets/uploads/' + metaData.latestComparison[0].graphPath.split("\\").slice(-1)[0]} width="100%" />
                                             </TableCell>
                                         </TableRow>
                                     )}
