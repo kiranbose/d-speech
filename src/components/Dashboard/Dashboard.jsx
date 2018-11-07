@@ -94,15 +94,23 @@ class Dashboard extends React.Component {
         let sampleRecordings = [];
         let userAverageWpm = 0;
         let sampleAverageWpm = 0;
+        let userAvgPower = 0;
+        let userAvgFreq = 0;
+        let sampleAvgPower
+        let sampleAvgFreq = 0;
         if (Object.keys(metaData).length > 0) {
 
             userRecordings = metaData.userRecordings;
             sampleRecordings = metaData.sampleRecordings;
             if (userRecordings.length > 0) {
                 userAverageWpm = Math.ceil(userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0) / userRecordings.length)
+                userAvgPower = Math.ceil(userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgPower)), 0) / userRecordings.length)
+                userAvgFreq = Math.ceil(userRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgFrequency)), 0) / userRecordings.length)
             }
             if (sampleRecordings.length > 0) {
                 sampleAverageWpm = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.speed)), 0) / sampleRecordings.length)
+                sampleAvgPower = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgPower)), 0) / sampleRecordings.length)
+                sampleAvgFreq = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgFrequency)), 0) / sampleRecordings.length)
             }
 
             cardInfo = [
@@ -133,10 +141,10 @@ class Dashboard extends React.Component {
                     container
                     spacing={10}
                     direction="row"
-                    justify="space-evenly"
+                    justify="space-around"
                 >
                     <Grid
-                        item md={6}
+                        item md={7}
                     >
                         {cardInfo.map((card) => {
                             return (
@@ -158,18 +166,20 @@ class Dashboard extends React.Component {
                                     <TableCell>File Duration</TableCell>
                                     <TableCell>Word Count</TableCell>
                                     <TableCell>Loudness</TableCell>
+                                    <TableCell>Frequency</TableCell>
                                     <TableCell>Audio Text</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {
-                                    metaData && metaData.hasOwnProperty('userRecordings') && metaData.userRecordings.map((data, index) => {
+                                    metaData && metaData.hasOwnProperty(!admin ? 'userRecordings' : 'sampleRecordings') && metaData[!admin ? 'userRecordings' : 'sampleRecordings'].map((data, index) => {
                                         return (
                                             <TableRow key={'' + index}>
                                                 <TableCell>{data.fileName}</TableCell>
                                                 <TableCell>{data.duration_milliseconds / 1000} sec</TableCell>
                                                 <TableCell>{data.speed} wpm</TableCell>
-                                                <TableCell>29</TableCell>
+                                                <TableCell>{Math.floor(data.recordingsWithPowerData[0].avgPower)}</TableCell>
+                                                <TableCell>{Math.floor(data.recordingsWithPowerData[0].avgFrequency)}</TableCell>
                                                 <TableCell>
                                                     {/* <Tooltip title="This is test"> */}
                                                     <Button color="primary" onClick={() => { this.handleOpen(data.text, data.graphPath) }}>
@@ -201,7 +211,7 @@ class Dashboard extends React.Component {
                         </Table>
                     </Grid>
                     <Grid
-                        item xs={5}
+                        item xs={3}
                     >
                         <Card className={classes.rightCard}>
                             <CardContent>
@@ -223,12 +233,12 @@ class Dashboard extends React.Component {
                                     <TableCell>{userAverageWpm}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
-                                    <TableCell><strong>Loudness</strong></TableCell>
-                                    <TableCell>30</TableCell>
+                                    <TableCell><strong>Power</strong></TableCell>
+                                    <TableCell>{userAvgPower}</TableCell>
                                 </TableRow>
                                 <TableRow key="3">
-                                    <TableCell><strong>Power</strong></TableCell>
-                                    <TableCell>40</TableCell>
+                                    <TableCell><strong>Frequency</strong></TableCell>
+                                    <TableCell>{userAvgFreq}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>}
@@ -242,12 +252,12 @@ class Dashboard extends React.Component {
                                     <TableCell>{sampleAverageWpm}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
-                                    <TableCell><strong>Loudness</strong></TableCell>
-                                    <TableCell>30</TableCell>
+                                    <TableCell><strong>Power</strong></TableCell>
+                                    <TableCell>{sampleAvgPower}</TableCell>
                                 </TableRow>
                                 <TableRow key="3">
-                                    <TableCell><strong>Power</strong></TableCell>
-                                    <TableCell>40</TableCell>
+                                    <TableCell><strong>Frequency</strong></TableCell>
+                                    <TableCell>{sampleAvgFreq}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
