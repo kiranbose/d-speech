@@ -10,7 +10,41 @@ body {
     text-align: center;
 }
 
-.modal.audioText{
+.modal.audioText {
     top: 30% !important;
     left: 20% !important;
+}
+
+.table-striped {
+    tr:nth-child(odd) {
+        background-color: #f2f2f2
+    }
+}
+
+.table-striped-even {
+    tr:nth-child(even) {
+        background-color: #f2f2f2
+    }
+}
+
+.medal {
+    position: absolute;
+    background: url(https://gallery.yopriceville.com/var/albums/Free-Clipart-Pictures/Trophy-and-Medals-PNG/Transparent_Gold_Silver_Bronze_Medals_PNG_Picture.png?m=1434276781);
+    background-size: cover;
+    width: 75px;
+    height: 80px;
+    top: 5px;
+    left: 10px;
+}
+
+.medal-Mastery {
+    background-position-x: 0;
+}
+
+.medal-Advanced {
+    background-position-x: 76px;
+}
+
+.medal-Intermediate {
+    background-position-x: 164px;
 }

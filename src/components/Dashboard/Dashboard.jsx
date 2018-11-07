@@ -28,7 +28,8 @@ const styles = theme => ({
         display: 'inline-block',
         marginRight: '10px',
         width:  '100%',
-        textAlign: 'center'
+        textAlign: 'center',
+        position: 'relative'
     },
     numberDisplay: {
         fontSize: '4em'
@@ -40,6 +41,9 @@ const styles = theme => ({
         boxShadow: theme.shadows[5],
         padding: theme.spacing.unit * 4,
     },
+    fullWidth: {
+        width: '100%'
+    }
 });
 
 function getModalStyle() {
@@ -54,6 +58,25 @@ function getModalStyle() {
 
 
 class Dashboard extends React.Component {
+    boundaryMetric = {
+        speed: {
+            master: 5,
+            advanced: 10
+        },
+        power: {
+            master: 10,
+            advanced: 20
+        },
+        freq: {
+            master: 1000,
+            advanced: 2000
+        },
+    }
+    speedScore = 3;
+    powerScore = 3;
+    freqScore = 3;
+    userScore = '';
+
     constructor(props) {
         super(props);
         this.state = {
@@ -86,6 +109,53 @@ class Dashboard extends React.Component {
         });
     };
 
+    calculateScore = (userAverageWpm,
+        userAvgPower,
+        userAvgFreq,
+        sampleAverageWpm,
+        sampleAvgPower,
+        sampleAvgFreq
+        ) => {
+
+            if (((sampleAverageWpm - this.boundaryMetric.speed.master)  < userAverageWpm) &&  (userAverageWpm < (sampleAverageWpm + this.boundaryMetric.speed.master))) {
+                this.speedScore = 1;
+            } else if (((sampleAverageWpm - this.boundaryMetric.speed.advanced)  < userAverageWpm) && (userAverageWpm < (sampleAverageWpm + this.boundaryMetric.speed.advanced))) {
+                this.speedScore = 2;
+            }
+
+            if (((sampleAvgPower - this.boundaryMetric.power.master)  < userAvgPower) && (userAvgPower < (sampleAvgPower + this.boundaryMetric.power.master))) {
+                this.powerScore = 1;
+            } else if (((sampleAvgPower - this.boundaryMetric.power.advanced)  < userAvgPower) && (userAvgPower < (sampleAvgPower + this.boundaryMetric.power.advanced))) {
+                this.powerScore = 2;
+            }
+
+            if (((sampleAvgFreq - this.boundaryMetric.freq.master)  < userAvgFreq) && (userAvgFreq < (sampleAvgFreq + this.boundaryMetric.freq.master))) {
+                this.freqScore = 1;
+            } else if (((sampleAvgFreq - this.boundaryMetric.freq.advanced)  < userAvgFreq) && (userAvgFreq < (sampleAvgFreq + this.boundaryMetric.freq.advanced))) {
+                this.freqScore = 2;
+            }
+
+            switch(this.speedScore + this.powerScore + this.freqScore) {
+                case 3:
+                    return 'Mastery';
+                case 5:
+                    return 'Advanced';
+                default:
+                    return 'Intermediate';
+            }
+        }
+    
+    getMetricScore(score) {
+        switch (score) {
+            case 1:
+                return 'Mastery';
+            case 2:
+                return 'Advanced';
+            default:
+                return 'InterMediate';
+        }
+    }
+
     render() {
         const { user, users, classes, metaData } = this.props;
         const admin = user.permission === 'administrator';
@@ -96,8 +166,9 @@ class Dashboard extends React.Component {
         let sampleAverageWpm = 0;
         let userAvgPower = 0;
         let userAvgFreq = 0;
-        let sampleAvgPower
+        let sampleAvgPower = 0;
         let sampleAvgFreq = 0;
+        let scoreLevel = 3;
         if (Object.keys(metaData).length > 0) {
 
             userRecordings = metaData.userRecordings;
@@ -112,6 +183,14 @@ class Dashboard extends React.Component {
                 sampleAvgPower = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgPower)), 0) / sampleRecordings.length)
                 sampleAvgFreq = Math.ceil(sampleRecordings.reduce(((prev, curr) => prev + Math.ceil(curr.recordingsWithPowerData[0].avgFrequency)), 0) / sampleRecordings.length)
             }
+
+            this.userScore = this.calculateScore(userAverageWpm,
+                            userAvgPower,
+                            userAvgFreq,
+                            sampleAverageWpm,
+                            sampleAvgPower,
+                            sampleAvgFreq
+                            );
 
             cardInfo = [
                 {
@@ -215,12 +294,15 @@ class Dashboard extends React.Component {
                     >
                         <Card className={classes.rightCard}>
                             <CardContent>
-                                <Typography variant="subheading" color="textPrimary">
-                                    User Score Level
-                                </Typography>
-                                <Typography variant="title">
-                                    Intermediate
-                                </Typography>
+                                    <div className={'medal medal-' + this.userScore}>
+                                        
+                                    </div>
+                                    <Typography variant="subheading" color="textPrimary">
+                                        User Score Level
+                                    </Typography>
+                                    <Typography variant="title">
+                                        {this.userScore}
+                                    </Typography>
                             </CardContent>
                         </Card>
                         {!admin && <Table className="table table-striped" style={{ marginTop: 30 }}>
@@ -230,15 +312,15 @@ class Dashboard extends React.Component {
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
-                                    <TableCell>{userAverageWpm}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{userAverageWpm} ({this.getMetricScore(this.speedScore)})</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
                                     <TableCell><strong>Power</strong></TableCell>
-                                    <TableCell>{userAvgPower}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{userAvgPower} ({this.getMetricScore(this.powerScore)})</TableCell>
                                 </TableRow>
                                 <TableRow key="3">
                                     <TableCell><strong>Frequency</strong></TableCell>
-                                    <TableCell>{userAvgFreq}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{userAvgFreq} ({this.getMetricScore(this.freqScore)})</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>}
@@ -249,15 +331,15 @@ class Dashboard extends React.Component {
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
-                                    <TableCell>{sampleAverageWpm}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{sampleAverageWpm}</TableCell>
                                 </TableRow>
                                 <TableRow key="2">
                                     <TableCell><strong>Power</strong></TableCell>
-                                    <TableCell>{sampleAvgPower}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{sampleAvgPower}</TableCell>
                                 </TableRow>
                                 <TableRow key="3">
                                     <TableCell><strong>Frequency</strong></TableCell>
-                                    <TableCell>{sampleAvgFreq}</TableCell>
+                                    <TableCell className={classes.fullWidth}>{sampleAvgFreq}</TableCell>
                                 </TableRow>
                             </TableBody>
                         </Table>
@@ -301,6 +383,7 @@ class Dashboard extends React.Component {
         );
     }
 }
+
 
 function mapStateToProps(state) {
     const { users, authentication, metaData } = state;

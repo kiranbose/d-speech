@@ -47,6 +47,12 @@ const styles = theme => ({
     },
     submit: {
       marginTop: theme.spacing.unit * 3,
+    },
+    copyright: {
+      position: 'absolute',
+      bottom: '10px',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
     }
   });
   
@@ -131,6 +137,7 @@ class LoginPage extends React.Component {
                   </Button>
                 </form>
               </Paper>
+              <Typography className={classes.copyright} variant="subheading">© Deloitte Touche Tohmatsu Limited. All Rights Reserved.</Typography>
             </main>
           </React.Fragment>
         );
