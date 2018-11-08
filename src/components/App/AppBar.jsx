@@ -20,7 +20,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { history } from '../../_helpers';
 import { ListItemIcon, ListItemText, ListItem, Tooltip } from '@material-ui/core/';
 import { Person, ExitToApp, ViewCarousel, Voicemail, GraphicEq } from '@material-ui/icons';
-import { VoicesPage } from '../VoicesPage/VoicesPage';
+import { VoicesPage } from '../VoicesPage';
 import { pathActions, userActions } from '../../_actions';
 import { Router, Route, Switch } from 'react-router-dom';
 

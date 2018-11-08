@@ -9,7 +9,6 @@ import MiniDrawer from './AppBar';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import './app.scss'
-import { VoicesPage } from '../VoicesPage';
 import { LinearProgress, Button } from '@material-ui/core';
 import Alert from './SnackBarContent';
 import { store } from '../../_helpers';
