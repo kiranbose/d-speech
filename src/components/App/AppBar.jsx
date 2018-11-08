@@ -165,12 +165,13 @@ class MiniDrawer extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="title" color="inherit" noWrap className={classNames(classes.typography)}>
-              Dashboard
+              D-Speech...
             </Typography>
             <div className="toolbar-buttons"></div>
             {isAuthed && (
-              <div>
-                <Tooltip title={"Hi, " + authentication.user.firstName}>
+              <div className="user-name">
+              <div className="user-name-text"> {"Hi, " + authentication.user.firstName}</div>
+                <Tooltip title={"Email: " + authentication.user.email}>
                  <IconButton
                   aria-owns={open ? 'menu-appbar' : null}
                   aria-haspopup="true"
