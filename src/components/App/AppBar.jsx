@@ -14,13 +14,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Dashboard from '../Dashboard/Dashboard'
 import { CompareVoices } from '../CompareVoices/CompareVoices'
+import { VoicesPage } from '../VoicesPage/VoicesPage';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { history } from '../../_helpers';
 import { ListItemIcon, ListItemText, ListItem, Tooltip } from '@material-ui/core/';
 import { Person, ExitToApp, ViewCarousel, Voicemail, GraphicEq } from '@material-ui/icons';
-import { VoicesPage } from '../VoicesPage/VoicesPage';
 import { pathActions, userActions } from '../../_actions';
 import { Router, Route, Switch } from 'react-router-dom';
 
