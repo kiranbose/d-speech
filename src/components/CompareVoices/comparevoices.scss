@@ -12,14 +12,18 @@
     text-align: center;
 }
 
-.margin50 {
-    margin-top: 40%;
-}
-
-.height {
-    height: 400px;
+.compare-button {
+    position: fixed !important;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #bde77d !important;
 }
 
 h2{
     font-weight: 600;
+}
+
+.d-content {
+    padding: 0 !important;
 }

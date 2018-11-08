@@ -3,9 +3,24 @@ import { connect } from 'react-redux';
 import './comparevoices.scss';
 import { store } from '../../_helpers';
 import { audioFileActions } from '../../_actions';
-import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { Button, Radio, Table, TableBody, TableCell, TableHead, TableRow, Modal, Typography, DialogTitle, DialogContent, DialogActions, Dialog  } from '@material-ui/core';
 import GraphicEq from "@material-ui/icons/GraphicEq";
+import { VoiceGraph } from '../VoiceGraph'
+import io from 'socket.io-client'
+import config from 'config';  //global variables - set shared variables in webpack.config
+// import Dialog from '@material-ui/core/Dialog';
 
+function getModalStyle() {
+    const top = 20;
+    const left = 20;
+
+    return {
+        top: `${top}%`,
+        left: `${left}%`,
+    };
+}
+
+let socket;
 
 class CompareVoices extends React.Component {
     constructor(props) {
@@ -15,79 +30,107 @@ class CompareVoices extends React.Component {
         this.state = {
             selectedSampleVoice: '',
             selectedUserVoice: '',
-            data: undefined
+            data: undefined,
+            open: false
         };
     }
 
-    // componentDidMount() {
-    //     this.props.dispatch(audioFileActions.getUserAudioFiles());
-    // }
+    handleOpen = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     componentDidMount() {
         this.props.dispatch(audioFileActions.getUserAudioFiles());
         store.subscribe(() => {
             var data = store.getState();
             if (data.audioFiles.hasOwnProperty('audioFiles')) {
-                this.setState({ data: data.audioFiles.audioFiles.result });            
+                this.setState({ data: data.audioFiles.audioFiles.result });
                 this.render();
             }
         });
+    }
+
+    componentWillUnmount() {
+        // socket.disconnect();
+    }
+
+    closeSocket = () => {
+        socket.disconnect();
+    }
+
+    openSocket = () => {
+        // socket = io.connect(config.apiUrl);
+        let url = config.apiUrl;
+        socket = io.connect(url);
+        socket.emit('clientConnected', {data: 'im connected'});
+        socket.on('chunkForFile1',(res)=>{
+            console.dir(res)
+        }) 
     }
 
     handleSampleVoiceChange(event) {
         this.setState({
             selectedSampleVoice: event.target.value
         });
+        this.props.audioFiles.selectedSampleVoice = event.target.value;
     }
 
     handleUserVoiceChange(event) {
         this.setState({
             selectedUserVoice: event.target.value
         });
+        this.props.audioFiles.selectedUserVoice = event.target.value;
     }
 
     render() {
-            const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
-            const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
-                <TableRow key={audio._id.$oid}>
-                    <TableCell>
-                        <Radio
-                            checked={this.state.selectedSampleVoice === audio.fileName}
-                            onChange={this.handleSampleVoiceChange}
-                            value={audio.fileName}
-                            name="radio-button-demo"
-                        />
-                    </TableCell>
-                    <TableCell>{audio.user}</TableCell>
-                    <TableCell>{audio.fileName}</TableCell>
-                </TableRow>
-            );
-            const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
-            const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
-                <TableRow key={audio._id.$oid}>
-                    <TableCell>
-                        <Radio
-                            checked={this.state.selectedUserVoice === audio.fileName}
-                            onChange={this.handleUserVoiceChange}
-                            value={audio.fileName}
-                            name="radio-button-demo"
-                        />
-                    </TableCell>
-                    <TableCell>{audio.user}</TableCell>
-                    <TableCell>{audio.fileName}</TableCell>
-                </TableRow>
-            );
+        const sampleVoiceFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "administrator") : [];
+        const title = "Power Analysis";
+        const sampleVoicerows = sampleVoiceFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>
+                    <Radio
+                        checked={this.state.selectedSampleVoice === audio.stereoFilePath}
+                        onChange={this.handleSampleVoiceChange}
+                        value={audio.stereoFilePath}
+                        name="radio-button-demo"
+                    />
+                </TableCell>
+                <TableCell>{audio.user.firstName}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+            </TableRow>
+        );
+        const userVoicerowsFilteredRows = this.props.audioFiles.audioFiles ? this.props.audioFiles.audioFiles.result.filter(ele => ele.permission === "guest") : [];
+        const userVoicerows = userVoicerowsFilteredRows.map((audio) =>
+            <TableRow key={audio._id.$oid}>
+                <TableCell>
+                    <Radio
+                        checked={this.state.selectedUserVoice === audio.stereoFilePath}
+                        onChange={this.handleUserVoiceChange}
+                        value={audio.stereoFilePath}
+                        name="radio-button-demo"
+                    />
+                </TableCell>
+                <TableCell>{audio.user.firstName}</TableCell>
+                <TableCell>{audio.fileName}</TableCell>
+            </TableRow>
+        );
         // }
         return (
             <div>
                 <div className="height">
                     <div className="align-left align-text">
-                        <h2>Sample voice records</h2>
+                        <Typography variant="subheading" color="textPrimary">
+                            Sample voice records
+                        </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
                                     <TableCell>Select</TableCell>
-                                    <TableCell>Username</TableCell>
+                                    <TableCell>User</TableCell>
                                     <TableCell>Recorded File</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -97,12 +140,14 @@ class CompareVoices extends React.Component {
                         </Table>
                     </div>
                     <div className="align-right align-text">
-                        <h2>User Voices records</h2>
+                        <Typography variant="subheading" color="textPrimary">
+                            User voice records
+                        </Typography>
                         <Table className="table table-striped">
                             <TableHead className="theadcolor">
                                 <TableRow>
                                     <TableCell>Select</TableCell>
-                                    <TableCell>Username</TableCell>
+                                    <TableCell>User</TableCell>
                                     <TableCell>Recorded File</TableCell>
                                 </TableRow>
                             </TableHead>
@@ -113,11 +158,37 @@ class CompareVoices extends React.Component {
                     </div>
                 </div>
                 <div className="align-text">
-                    <Button className="margin50" variant="extendedFab" aria-label="Delete">
+                    <Button onClick={this.handleOpen} disabled={!(this.state.selectedSampleVoice && this.state.selectedUserVoice)} className="compare-button" variant="extendedFab" aria-label="Delete">
                         <GraphicEq />
                         Compare Voices
                     </Button>
                 </div>
+
+                {/* socket programming code commented out
+                uncomment if socket needed */}
+                
+                {/* <Button onClick={this.openSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                    <GraphicEq />
+                    Open Socket
+                </Button>
+                <Button onClick={this.closeSocket} className="margin50" variant="extendedFab" aria-label="Open">
+                    <GraphicEq />
+                    Close Socket
+                </Button> */}
+
+
+                 <Dialog maxWidth='lg' onClose={this.handleClose} aria-labelledby="graph-dialog-title" open={this.state.open}>
+                    <DialogTitle id="graph-dialog-title">{title}</DialogTitle>
+                    <DialogContent className="d-content">
+                        <VoiceGraph />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleClose} color="secondary">
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </div>
         )
     }

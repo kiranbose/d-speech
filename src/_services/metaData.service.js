@@ -2,21 +2,9 @@ import config from 'config';  //global variables - set shared variables in webpa
 import { authHeader } from '../_helpers';
 import { commonHandlers } from './index'
 
-export const audioFilesService = {
-    getUserAudioFiles,
+export const metaDataService = {
     getMetaDataService
 };
-
-function getUserAudioFiles() {
-    let email = JSON.parse(localStorage.getItem('user')).email;
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader(),
-        credentials: 'same-origin'
-    };
-    return fetch(`${config.apiUrl}/getUserAudioFiles`, requestOptions)
-        .then(commonHandlers.handleAuthentication)
-}
 
 function getMetaDataService() {
     const requestOptions = {

@@ -19,17 +19,8 @@ import { Add } from '@material-ui/icons';
 import Dialog from '../Dialog/Dialog';
 
 const styles = theme => ({
-    paperBackground: {
-        // backgroundColor: theme.palette.primary.main,
-        // height: '100%',
-        // display: 'flex',
-        // justifyContent: 'center',
-        // alignItems: 'center',
-        // overflow: 'auto',
-        // padding: '5%'
-    },
     fab: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: theme.spacing.unit * 2,
         right: theme.spacing.unit * 2,
         color: theme.palette.common.white,

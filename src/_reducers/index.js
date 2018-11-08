@@ -7,6 +7,8 @@ import { alert } from './alert.reducer';
 import { recordings } from './recording.reducer';
 import { loadingBar } from './loadingBar.reducer';
 import { audioFiles } from './audioFiles.reducer';
+import { voiceGraph } from './voiceGraph.reducer';
+import { metaData } from './metaData.reducer';
 import { path } from '../_actions';
 
 const rootReducer = combineReducers({
@@ -17,7 +19,9 @@ const rootReducer = combineReducers({
   path,
   recordings,
   loadingBar,
-  audioFiles
+  audioFiles,
+  voiceGraph,
+  metaData
 });
 
 export default rootReducer;

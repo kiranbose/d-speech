@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const devPort = 9000;
-const flaskEndPoint = ' http://127.0.0.1:5000'
+const flaskEndPoint = 'http://127.0.0.1:5000'
 const webpack = require('webpack');
 
 module.exports = function webpackConfig() {
@@ -86,7 +86,11 @@ module.exports = function webpackConfig() {
         filename: 'index.html',
         inject: 'body'
       }),
-      new CopyWebpackPlugin([{ from: 'src/assets/images', to: 'assets/images' }])
+      new CopyWebpackPlugin([
+        { from: 'src/assets/images', to: 'assets/images' },
+        { from: 'src/assets/uploads', to: 'assets/uploads' }
+      ])
+      
     ],
     resolve: {
       extensions: ['.js', '.jsx'],
@@ -98,11 +102,11 @@ module.exports = function webpackConfig() {
       contentBase: path.join(__dirname, 'dist'),
       compress: true,
       historyApiFallback: true,
-      port: devPort
+      port: devPort,
     },
     externals: {
       // global app config object
-      config: JSON.stringify({
+      'config': JSON.stringify({
           apiUrl: flaskEndPoint,
           permission: 'guest',
           loadingBar: false,
