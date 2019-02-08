@@ -93,9 +93,9 @@ class CompareVoices extends React.Component {
             <TableRow key={audio._id.$oid}>
                 <TableCell>
                     <Radio
-                        checked={this.state.selectedSampleVoice === audio.stereoFilePath}
+                        checked={this.state.selectedSampleVoice === audio.gcsFileUrl}
                         onChange={this.handleSampleVoiceChange}
-                        value={audio.stereoFilePath}
+                        value={audio.gcsFileUrl}
                         name="radio-button-demo"
                     />
                 </TableCell>
@@ -108,9 +108,9 @@ class CompareVoices extends React.Component {
             <TableRow key={audio._id.$oid}>
                 <TableCell>
                     <Radio
-                        checked={this.state.selectedUserVoice === audio.stereoFilePath}
+                        checked={this.state.selectedUserVoice === audio.gcsFileUrl}
                         onChange={this.handleUserVoiceChange}
-                        value={audio.stereoFilePath}
+                        value={audio.gcsFileUrl}
                         name="radio-button-demo"
                     />
                 </TableCell>

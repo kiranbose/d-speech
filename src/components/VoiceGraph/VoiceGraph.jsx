@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import { store } from '../../_helpers';
 import { voiceGraphActions } from '../../_actions';
 import { Grid, Card, CardContent, Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import purple from '@material-ui/core/colors/purple';
+
 // import CanvasJS from 'canvasjs'
 
 class VoiceGraph extends React.Component {
@@ -32,10 +35,16 @@ class VoiceGraph extends React.Component {
     render() {
         const { voiceGraph } = this.props;
         return (
-            <div>
-                {voiceGraph && voiceGraph.hasOwnProperty('fileName') &&
+            <div> 
+                {voiceGraph && !voiceGraph.hasOwnProperty('plotUrl') && 
                     <div>
-                        <img src={'../../assets/uploads/' + voiceGraph.fileName} alt="graph" width="100%" />
+                        <CircularProgress style={{ marginLeft: '48%' }} />
+                    </div>
+                }
+                {voiceGraph && voiceGraph.hasOwnProperty('plotUrl') &&
+                    <div>
+                        <CircularProgress style={{ margin: '200px', color: purple[500], display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+                        <img src={voiceGraph.plotUrl} alt="graph" width="100%" />
                         <Grid
                             container
                             spacing={14}

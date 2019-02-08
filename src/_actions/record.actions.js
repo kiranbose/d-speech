@@ -1,5 +1,5 @@
 import { recordService } from '../_services';
-import { alertActions } from './';
+import { alertActions, metaDataActions } from './';
 import { history } from '../_helpers';
 import { loadingBarActions } from './loadingBar.actions'
 
@@ -21,6 +21,7 @@ function saveRecording(recording) {
                     dispatch(loadingBarActions.stopLoadingBar());
                     dispatch(alertActions.success('Recording Saved'));
                     dispatch(clearRecording());
+                    dispatch(metaDataActions.getMetaData());
                     // history.push('/dashboard');
                 },
                 error => {
