@@ -11,7 +11,7 @@ function postRecording(recording) {
      * Save a recording in daatbase
      */
     const data = new FormData();    
-    data.append('file', recording.blob, 'speech-' + getFormattedTime() + '.wav')
+    data.append('file', recording.blob, 'speech' + '.wav')
     const requestOptions = {
         method: 'POST',
         headers: authHeader(),

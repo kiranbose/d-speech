@@ -82,7 +82,7 @@ class Dashboard extends React.Component {
         this.state = {
             open: false,
             googleText: '',
-            graphPath: ''
+            plotUrl: ''
         };
     }
 
@@ -99,7 +99,7 @@ class Dashboard extends React.Component {
         this.setState({
             open: true,
             googleText: text,
-            graphPath: path
+            plotUrl: path
         });
     };
 
@@ -261,7 +261,7 @@ class Dashboard extends React.Component {
                                                 <TableCell>{Math.floor(data.recordingsWithPowerData[0].avgFrequency)}</TableCell>
                                                 <TableCell>
                                                     {/* <Tooltip title="This is test"> */}
-                                                    <Button color="primary" onClick={() => { this.handleOpen(data.text, data.graphPath) }}>
+                                                    <Button color="primary" onClick={() => { this.handleOpen(data.text, data.recordingsWithPowerData[0].plotUrl) }}>
                                                         <Icon>help</Icon>
                                                     </Button>
                                                     {/* </Tooltip> */}
@@ -282,7 +282,7 @@ class Dashboard extends React.Component {
                                     metaData && metaData.hasOwnProperty('latestComparison') && metaData.latestComparison.length > 0 && (
                                         <TableRow>
                                             <TableCell>
-                                                <img src={'../../assets/uploads/' + metaData.latestComparison[0].graphPath.split("\\").slice(-1)[0]} width="100%" />
+                                                <img src={metaData.latestComparison[0].plotUrl} width="100%" />
                                             </TableCell>
                                         </TableRow>
                                     )}
@@ -354,7 +354,7 @@ class Dashboard extends React.Component {
                                             if (index >= metaData.userRecordings.length - 5) {
                                                 return (<TableRow key={index}>
                                                     <TableCell>
-                                                        <img src={'../../assets/uploads/' + data.graphPath} width="100%" />
+                                                        <img src={data.recordingsWithPowerData[0].plotUrl} width="100%" />
                                                     </TableCell>
                                                 </TableRow>)
                                             }
@@ -372,7 +372,7 @@ class Dashboard extends React.Component {
                     open={this.state.open}
                     onClose={this.handleClose}>
                     <div style={getModalStyle()} className={classes.paper}>
-                        <img src={'../../assets/uploads/' + this.state.graphPath} alt="graph" width="100%" />
+                        <img src={this.state.plotUrl} alt="graph" width="100%" />
                         <Typography variant="subheading" id="modal-title">
                             {this.state.googleText}
                         </Typography>
