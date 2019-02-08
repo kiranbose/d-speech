@@ -1,9 +1,10 @@
+t
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const devPort = 9000;
-const flaskEndPoint = 'http://35.185.66.14:5000'
+const flaskEndPoint = 'http://34.73.79.246:5000'
 const webpack = require('webpack');
 
 module.exports = function webpackConfig() {
