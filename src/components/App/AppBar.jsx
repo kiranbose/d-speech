@@ -14,7 +14,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import Dashboard from '../Dashboard/Dashboard';
 import { CompareVoices } from '../CompareVoices/CompareVoices';
-import VoicesPage from '../VoicesPage/VoicesPage';
+import { VoicesPage } from '../VoicesPage/VoicesPage';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';

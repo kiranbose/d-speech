@@ -165,4 +165,4 @@ function mapStateToProps(state) {
 
 
 const voicesPage = connect(mapStateToProps)(VoicesPage);
-export default voicesPage;
+export { voicesPage as VoicesPage };
