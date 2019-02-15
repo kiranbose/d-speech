@@ -26,7 +26,6 @@ import { Router, Route, Switch } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import './app.scss'
-import { userService } from '../../_services';
 
 const drawerWidth = 240;
 
