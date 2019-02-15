@@ -66,7 +66,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                    <Button onClick={() => { this.handleOpen(audio.fileName) }} value={audio.fileName} className="button" variant="extendedFab" >
+                    <Button onClick={() => { this.handleOpen(audio.gcsFileUrl) }} value={audio.gcsFileUrl} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button> 
                 </TableCell>
@@ -78,7 +78,7 @@ class VoicesPage extends React.Component {
                 <TableCell>{audio.user.firstName}</TableCell>
                 <TableCell>{audio.fileName}</TableCell>
                 <TableCell>
-                   <Button onClick={() => { this.handleOpen(audio.fileName) }} value={audio.fileName} className="button" variant="extendedFab" >
+                   <Button onClick={() => { this.handleOpen(audio.gcsFileUrl) }} value={audio.gcsFileUrl} className="button" variant="extendedFab" >
                         <PlayArrow />
                     </Button>                  
                 </TableCell>
@@ -144,7 +144,7 @@ class VoicesPage extends React.Component {
                         onClose={this.handleClose}>
                         <Grid style={getModalStyle()} >
                             <ReactAudioPlayer
-                                src={"../../assets/uploads/" + this.state.fileSource}
+                                src={this.state.fileSource}
                                 autoPlay
                                 controls
                                 />
