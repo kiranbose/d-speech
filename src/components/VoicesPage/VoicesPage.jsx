@@ -143,11 +143,15 @@ class VoicesPage extends React.Component {
                         open={this.state.open}
                         onClose={this.handleClose}>
                         <Grid style={getModalStyle()} >
-                            <ReactAudioPlayer
+                            <audio autoPlay="true" controls>
+                                <source src={this.state.fileSource}></source>
+                            </audio>
+                            {/* <ReactAudioPlayer
                                 src={this.state.fileSource}
                                 autoPlay
                                 controls
-                                />
+                                crossOrigin="false" 
+                                /> */}
                         </Grid>
                     </Modal>
                 </div>
