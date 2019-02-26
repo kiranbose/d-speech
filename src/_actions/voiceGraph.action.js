@@ -1,6 +1,7 @@
 import { voiceGraphService } from '../_services';
 export const voiceGraphActions = {
-    getFileData    
+    getFileData,
+    setFileData  
 };
 
 function getFileData(fileName1, fileName2) {
@@ -11,6 +12,12 @@ function getFileData(fileName1, fileName2) {
                     dispatch(success(data));
                 }
             );
+    };        
+}
+
+function setFileData(data) {
+    return dispatch => {
+        dispatch(success(data));
     };        
 }
 

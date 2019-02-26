@@ -277,16 +277,24 @@ class Dashboard extends React.Component {
                             <Typography className="th-color" variant="subheading" id="modal-title">
                                 Latest Comparison
                             </Typography>
-                            <TableBody>
                                 {
                                     metaData && metaData.hasOwnProperty('latestComparison') && metaData.latestComparison.length > 0 && (
-                                        <TableRow>
-                                            <TableCell>
-                                                <img src={metaData.latestComparison[0].plotUrl} width="100%" />
-                                            </TableCell>
-                                        </TableRow>
+                                        <TableBody>
+                                            {
+                                                metaData.latestComparison.map((item, index) => {
+                                                    if(index < 3) {
+                                                        return (
+                                                            <TableRow>
+                                                                <TableCell>
+                                                                        <img src={item.plotUrl} width="100%" />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </TableBody>
                                     )}
-                            </TableBody>
                         </Table>
                     </Grid>
                     <Grid

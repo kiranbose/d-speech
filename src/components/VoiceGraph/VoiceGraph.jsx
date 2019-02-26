@@ -19,6 +19,7 @@ class VoiceGraph extends React.Component {
     }
 
     componentWillMount() {
+        this.props.dispatch(voiceGraphActions.setFileData({}));
         this.props.dispatch(voiceGraphActions.getFileData(this.props.audioFiles.selectedSampleVoice, this.props.audioFiles.selectedUserVoice));
         store.subscribe(() => {
             var data = store.getState();
@@ -43,7 +44,6 @@ class VoiceGraph extends React.Component {
                 }
                 {voiceGraph && voiceGraph.hasOwnProperty('plotUrl') &&
                     <div>
-                        <CircularProgress style={{ margin: '200px', color: purple[500], display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
                         <img src={voiceGraph.plotUrl} alt="graph" width="100%" />
                         <Grid
                             container
