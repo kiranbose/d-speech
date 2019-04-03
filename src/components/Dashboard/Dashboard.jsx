@@ -298,26 +298,49 @@ class Dashboard extends React.Component {
                         </Table>
                     </Grid>
                     <Grid
-                        item xs={3}
+                        item md={3}
                     >
                         <Card className={classes.rightCard}>
                             <CardContent>
+                            <Grid container sm={12}>
+                                    <Grid item sm={4}>
                                     <div className={'medal medal-' + this.userScore}>
-                                        
+                                                
                                     </div>
-                                    <Typography variant="subheading" color="textPrimary">
-                                        User Score Level
-                                    </Typography>
-                                    <Typography variant="title">
-                                        {this.userScore}
-                                    </Typography>
+                                    </Grid>
+                                    <Grid item sm={8}>
+                                        <Grid direction="column" container justify="center" alignItems="stretch"
+justify="center" alignItems="stretch">
+                                            <Grid item lg={12} md={12} xs={12} sm={12}>
+                                            <Typography variant="subheading" color="textPrimary">
+                                                User Score Level
+                                            </Typography>
+                                            </Grid>
+                                        
+                                            <Grid item lg={12} md={12} xs={12} sm={12}>
+                                            <Typography variant="title">
+                                                {this.userScore}
+                                            </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                    
+                            </Grid>
                             </CardContent>
                         </Card>
-                        {!admin && <Table className="table table-striped" style={{ marginTop: 30 }}>
-                            <Typography className="th-color" variant="subheading" id="modal-title">
-                                User Metrics (Overall Avg)
-                            </Typography>
-                            <TableBody>
+                        {!admin && <Table>
+                            <TableHead>
+                                <TableRow >
+                                    <TableCell colSpan="2">
+                        <Typography className="th-color" variant="subheading" id="modal-title">
+                        User Metrics (Overall Avg)
+                        
+                        </Typography>
+                        </TableCell>
+                        </TableRow>
+                        </TableHead>
+                        
+                            <TableBody className="table table-striped" style={{ marginTop: 30 }}>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
                                     <TableCell className={classes.fullWidth}>{userAverageWpm} ({this.getMetricScore(this.speedScore)})</TableCell>
@@ -333,9 +356,15 @@ class Dashboard extends React.Component {
                             </TableBody>
                         </Table>}
                         <Table className="table table-striped" style={{ marginTop: 30 }}>
+                        <TableHead>
+                                <TableRow >
+                                    <TableCell colSpan="2">
                             <Typography className="th-color" variant="subheading" id="modal-title">
                                 Sample Metrics (Overall Avg)
                             </Typography>
+                            </TableCell>
+                            </TableRow>
+                            </TableHead>
                             <TableBody>
                                 <TableRow key="1">
                                     <TableCell><strong>Speed</strong></TableCell>
