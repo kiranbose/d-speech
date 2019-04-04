@@ -1,23 +1,54 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions, pathActions } from '../../_actions';
 import { withStyles } from '@material-ui/core/styles';
 import compose from 'recompose/compose';
-import classNames from 'classnames';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Grid, TextField, FormHelperText } from '@material-ui/core';
-import { VerifiedUser } from '@material-ui/icons';
+import { VerifiedUser, TrainOutlined, TurnedInNotOutlined } from '@material-ui/icons';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
+const designation_name= [
+  'Business Technology Analyst',
+  'Consultant',
+  'Senior Consultant',
+  'Manager',
+  'Specialist Senior',
+  'Partner',
+  'Managing Director',
+];
 
+const location_name= [
+'Bangalore',
+'Hyderabad',
+'Delhi',
+'Mumbai'
+];
+
+const industry_name= [
+'Audit & Assurance',
+'Consulting',
+'Deloitte Risk & Financial Advisory',
+'Financial Advisory Services',
+'Internal Services',
+'Legal',
+'Tax Services',
+];
+
+const serviceLine_name= [
+'System Engineering',
+'Sector Packages',
+'Cloud Engineering',
+'Deloitte Digital'
+];
 
 const styles = theme => ({
     layout: {
@@ -51,36 +82,52 @@ const styles = theme => ({
     },
   });
   
+  const emailRegex = RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_'{|}]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/);
+  const empRegex = RegExp(/^[0-9]*$/);
+const formValid = formErrors => { 
+  let valid = true;
+Object.values(formErrors).forEach(val => {
+val.length > 0 && (valid = false);
+});
+return valid;
+};
+ 
+
 class RegisterPage extends React.Component {
     constructor(props) {
         super(props);
 
         // reset login status
         this.props.dispatch(userActions.logout());
-
         this.state = {
-            user: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                password: '',
-                empId: '',
-                industry: '',
-                serviceLine: '',
-                serviceArea: '',
-                designation: '',
-                location: '',
-                mobileNo: '',
-                permission: ''
-            },
-            submitted: false
-        };
+          user: {
+            firstName: '',
+            lastName: '',
+            email: '',
+            password: '',
+            empId: '',
+            industry: '',
+            serviceLine: '',
+            serviceArea: '',
+            designation: '',
+            location: '',
+            mobileNo: '',
+            permission: ''
+          },
+          formErrors: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            empId: "",
+            mobileNo: "",
+            }
+        }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+       
     }
 
     handleChange(event) {
@@ -88,10 +135,51 @@ class RegisterPage extends React.Component {
         const { user } = this.state;
         this.setState({
             user: {
-                ...user,
-                [name]: value
+              ...user,
+              [name]: value,
             }
         });
+    }
+
+    handleBlur(event)
+    {
+      const { name, value } = event.target;
+      const { user } = this.state;
+      this.setState({
+        user: {
+            ...user,
+            [name]: value
+          }
+    });
+
+      let formErrors = this.state.formErrors;
+
+      console.log("Name:", name);
+      console.log("value:", value);
+      
+         switch(name) {
+           case "firstName":
+           formErrors.firstName = value.length < 3 && value.length > 0 ? 'Minimum 3 characters req' : "";
+           break;
+           case "lastName":
+           formErrors.lastName = value.length < 3 && value.length > 0 ? 'Minimum 3 characters req' : "";
+           break;
+           case "email":
+           formErrors.email = !emailRegex.test(value) && value.length >= 1 ? 'Invalid email address' : "";
+           break;
+           case "password":
+           formErrors.password = value.length < 6  && value.length > 0 ? 'Minimum 6 characters req' : "";
+           break;
+           case "empId":
+           formErrors.empId = !empRegex.test(value) && value.length >= 1 ? 'Invalid employee ID' : "";
+           break;
+           case "mobileNo":
+           formErrors.mobileNo = !(empRegex.test(value) && value.length == 10) && value.length >= 1 ? 'Invalid Mobile Number' : '' ;
+           default:
+           break;
+         
+         }
+       this.setState({ formErrors, [name]: value}, () => console.log(this.state));
     }
 
     handleSubmit(event) {
@@ -100,7 +188,8 @@ class RegisterPage extends React.Component {
         this.setState({ submitted: true });
         const { user } = this.state;
         const { dispatch } = this.props;
-        if (user.firstName && user.lastName && user.email && user.password) {
+        let formErrors = this.state.formErrors;
+        if (user.firstName && user.lastName && user.email && user.password && user.empId && user.industry && user.serviceLine && user.designation && user.location &&  user.mobileNo && !formErrors.firstName && !formErrors.lastName && !formErrors.email && !formErrors.password &&!formErrors.empId && !formErrors.mobileNo) {
             dispatch(userActions.register(user));
         }
     }
@@ -108,6 +197,7 @@ class RegisterPage extends React.Component {
     render() {
         const { registering, classes } = this.props;
         const { user, submitted } = this.state;
+        const { formErrors } = this.state;
         return (
             <React.Fragment>
             <CssBaseline />
@@ -129,7 +219,10 @@ class RegisterPage extends React.Component {
                     <Grid item md xs={12}>
                         <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="email">Email Address</InputLabel>
-                        <Input id="email" type="email" name="email" autoComplete="email" autoFocus value={this.state.email} onChange={this.handleChange}/>
+                        <Input id="email" className={formErrors.email.length > 0 ? "error" : null} type="email" name="email" autoComplete="email" autoFocus value={user.email} onBlur={this.handleBlur} onChange={this.handleChange}/>
+                        {formErrors.email.length>0 && (
+                        <FormHelperText error={true}>{formErrors.email}</FormHelperText>
+                        )}
                         <FormHelperText hidden={!(submitted && !user.email)} error={true}>This field is required</FormHelperText>
                     </FormControl>
                     <FormControl margin="normal" required fullWidth>
@@ -139,32 +232,45 @@ class RegisterPage extends React.Component {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        value={this.state.password} onChange={this.handleChange}
+                        className={formErrors.password.length > 0 ? "error" : null}
+                        value={user.password} onChange={this.handleChange}
+                        onBlur={this.handleBlur}
                         />
+                         {formErrors.password.length>0 && (
+                        <FormHelperText error={true}>{formErrors.password}</FormHelperText>
+                        )}
                         <FormHelperText hidden={!(submitted && !user.password)} error={true}>This field is required</FormHelperText>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="firstName">First Name</InputLabel>
                         <Input required
+                        className={formErrors.firstName.length > 0 ? "error" : null}
                         name="firstName"
                         type="firstName"
                         id="firstName"
                         autoComplete="firstName"
+                        onBlur={this.handleBlur}
                         value={user.firstName} onChange={this.handleChange}
                         />
+                        {formErrors.firstName.length>0 && (
+                        <FormHelperText error={true}>{formErrors.firstName}</FormHelperText>)}
                         <FormHelperText hidden={!(submitted && !user.firstName)} error={true}>This field is required</FormHelperText>
                     </FormControl>
 
                     <FormControl margin="normal" required fullWidth>
                         <InputLabel htmlFor="lastName">Last Name</InputLabel>
                         <Input
+                        className={formErrors.lastName.length > 0 ? "error" : null}
                         name="lastName"
                         type="lastName"
                         id="lastName"
                         autoComplete="lastName"
+                        onBlur={this.handleBlur}
                         value={user.lastName} onChange={this.handleChange}
                         />
+                         {formErrors.lastName.length>0 && (
+                        <FormHelperText error={true}>{formErrors.lastName}</FormHelperText>)}
                         <FormHelperText hidden={!(submitted && !user.lastName)} error={true}>This field is required</FormHelperText>
                     </FormControl>
 
@@ -175,8 +281,13 @@ class RegisterPage extends React.Component {
                         type="empId"
                         id="empId"
                         autoComplete="empId"
+                        onBlur={this.handleBlur}
+                        className={formErrors.empId.length > 0 ? "error" : null}
                         value={user.empId} onChange={this.handleChange}
                         />
+                        {formErrors.empId.length>0 && (
+                        <FormHelperText error={true}>{formErrors.empId}</FormHelperText>
+                        )}
                         <FormHelperText hidden={!(submitted && !user.empId)} error={true}>This field is required</FormHelperText>
                     </FormControl>
 
@@ -184,51 +295,64 @@ class RegisterPage extends React.Component {
                     
                     <Grid item md xs={12}>
                         
-                        <FormControl margin="normal" required fullWidth>
+                        <FormControl variant="outlined" margin="normal" required fullWidth>
                             <InputLabel htmlFor="industry">Industry</InputLabel>
-                            <Input
-                            name="industry"
-                            type="industry"
-                            id="industry"
-                            autoComplete="industry"
-                            value={user.industry} onChange={this.handleChange}
-                            />
+                            <Select value={user.industry}
+                         onChange={this.handleChange} 
+                         input={<Input name="industry"  type="industry"
+                         id="industry" autoComplete="industry"/>}>
+                        {industry_name.map(name => (
+                        <MenuItem key={name} value={name}>
+                        {name}
+                       </MenuItem>
+                         ))}
+                       </Select>
                         <FormHelperText hidden={!(submitted && !user.industry)} error={true}>This field is required</FormHelperText>
                         </FormControl>
 
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="serviceLine">Service Line</InputLabel>
-                            <Input
-                            name="serviceLine"
-                            type="serviceLine"
-                            id="serviceLine"
-                            autoComplete="serviceLine"
-                            value={user.serviceLine} onChange={this.handleChange}
-                            />
+                            <Select value={user.serviceLine}
+                         onChange={this.handleChange} 
+                         input={<Input name="serviceLine"  type="serviceLine"
+                         id="serviceLine" autoComplete="serviceLine"/>}>
+                        {serviceLine_name.map(name => (
+                        <MenuItem key={name} value={name}>
+                        {name}
+                       </MenuItem>
+                         ))}
+                       </Select>
                         <FormHelperText hidden={!(submitted && !user.serviceLine)} error={true}>This field is required</FormHelperText>
                         </FormControl>
 
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="designation">Designation</InputLabel>
-                            <Input
-                            name="designation"
-                            type="designation"
-                            id="designation"
-                            autoComplete="designation"
-                            value={user.designation} onChange={this.handleChange}
-                            />
+                        <InputLabel htmlFor="designation">Designation</InputLabel>
+                        <Select value={user.designation}
+                         onChange={this.handleChange} 
+                         input={<Input name="designation"  type="designation"
+                         id="designation" autoComplete="designation"/>}>
+                        {designation_name.map(name => (
+                        <MenuItem key={name} value={name}>
+                        {name}
+                       </MenuItem>
+                         ))}
+                       </Select>
+                         
                         <FormHelperText hidden={!(submitted && !user.designation)} error={true}>This field is required</FormHelperText>
                         </FormControl>
 
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="location">Location</InputLabel>
-                            <Input
-                            name="location"
-                            type="location"
-                            id="location"
-                            autoComplete="location"
-                            value={user.location} onChange={this.handleChange}
-                            />
+                            <Select value={user.location}
+                         onChange={this.handleChange}
+                         input={<Input name="location"  type="location"
+                         id="location" autoComplete="location"/>} >
+                        {location_name.map(name => (
+                        <MenuItem key={name} value={name}>
+                        {name}
+                       </MenuItem>
+                         ))}
+                       </Select>
                         <FormHelperText hidden={!(submitted && !user.location)} error={true}>This field is required</FormHelperText>
                         </FormControl>
 
@@ -239,17 +363,19 @@ class RegisterPage extends React.Component {
                             type="mobileNo"
                             id="mobileNo"
                             autoComplete="mobileNo"
+                            onBlur={this.handleBlur}
+                            className={formErrors.mobileNo.length > 0 ? "error" : null}
                             value={user.mobileNo} onChange={this.handleChange}
                             />
+                             {formErrors.mobileNo.length>0 && (
+                         <FormHelperText error={true}>{formErrors.mobileNo} </FormHelperText>
+                        )}
                         <FormHelperText hidden={!(submitted && !user.mobileNo)} error={true}>This field is required</FormHelperText>
                         </FormControl>
 
                     </Grid>
 
                 </Grid>
-                 
-
-
                   <Button
                     type="submit"
                     fullWidth
