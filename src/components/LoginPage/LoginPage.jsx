@@ -137,7 +137,6 @@ class LoginPage extends React.Component {
                   </Button>
                 </form>
               </Paper>
-              <Typography className={classes.copyright} variant="subheading">© Deloitte Touche Tohmatsu Limited. All Rights Reserved.</Typography>
             </main>
           </React.Fragment>
         );
