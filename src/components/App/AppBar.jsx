@@ -163,8 +163,14 @@ class MiniDrawer extends React.Component {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit" noWrap className={classNames(classes.typography)}>
+            <Typography variant="title" color="inherit" noWrap className={this.checkPath('/dashboard') ? classNames(classes.typography) : classNames(classes.hide)}>
               Dashboard
+            </Typography>
+            <Typography variant="title" color="inherit" noWrap className={this.checkPath('/voicesPage') ? classNames(classes.typography) : classNames(classes.hide)}>
+            User Voices
+            </Typography>
+            <Typography variant="title" color="inherit" noWrap className={this.checkPath('/compareVoices') ? classNames(classes.typography) : classNames(classes.hide)}>
+            Compare Voices
             </Typography>
             <div className="toolbar-buttons"></div>
             {isAuthed && (

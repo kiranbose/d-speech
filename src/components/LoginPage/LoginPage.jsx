@@ -14,7 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { Grid, TextField } from '@material-ui/core';
+import { Grid, TextField , FormHelperText } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import './login.scss'
 
@@ -110,6 +110,7 @@ class LoginPage extends React.Component {
                   <FormControl margin="normal" required fullWidth>
                     <InputLabel htmlFor="email">Email Address</InputLabel>
                     <Input id="email" type="email" name="email" autoComplete="email" autoFocus value={this.state.email} onChange={this.handleChange}/>
+                    <FormHelperText hidden={!(submitted && !email)} error={true}>This field is required</FormHelperText>
                   </FormControl>
                   <FormControl margin="normal" required fullWidth>
                     <InputLabel htmlFor="password">Password</InputLabel>
@@ -120,6 +121,7 @@ class LoginPage extends React.Component {
                       autoComplete="current-password"
                       value={this.state.password} onChange={this.handleChange}
                     />
+                    <FormHelperText hidden={!(submitted && !password)} error={true}>This field is required</FormHelperText>
                   </FormControl>
                   <Button
                     type="submit"
